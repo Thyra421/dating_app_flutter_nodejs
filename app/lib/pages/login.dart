@@ -1,6 +1,8 @@
-import 'package:app/navigation.dart';
+import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
+
+import '../global/format.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,22 +18,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   void _onSubmit() {
-    if (_formKey.currentState!.validate()) Navigation.home(context);
+    if (_formKey.currentState!.validate()) Navigation.home();
   }
 
   void _toggleObscureText() => setState(() => _obscureText = !_obscureText);
-
-  Widget _formatButton(Widget child) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: SizedBox(
-          height: 50,
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [Expanded(child: child)])));
-
-  Widget _formatField(Widget child) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: child);
 
   Widget _mailField() => TextFormField(
       controller: _mailController,
@@ -77,8 +67,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginForm() => Form(
       key: _formKey,
       child: Column(children: [
-        _formatField(_mailField()),
-        _formatField(_passwordField())
+        formatField(_mailField()),
+        formatField(_passwordField())
       ]));
 
   Widget _image() => Image.asset("lust.png", height: 400);
@@ -89,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           const Text("Not a member?",
               style: TextStyle(fontWeight: FontWeight.bold)),
           TextButton(
-              onPressed: () {},
+              onPressed: () => Navigation.register(replace: true),
               child: const Text("Register",
                   style: TextStyle(fontWeight: FontWeight.bold)))
         ],
@@ -102,12 +92,12 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           _image(),
           _loginForm(),
-          _formatButton(_submitButton()),
+          formatButton(_submitButton()),
           const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text("or", style: TextStyle(fontWeight: FontWeight.bold))),
-          _formatButton(_googleButton()),
-          _formatButton(_facebookButton()),
+          formatButton(_googleButton()),
+          formatButton(_facebookButton()),
           _register()
         ],
       ),

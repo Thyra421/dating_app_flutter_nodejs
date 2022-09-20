@@ -1,5 +1,5 @@
-import 'package:app/api.dart';
-import 'package:app/future_widget.dart';
+import 'package:app/global/api.dart';
+import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
