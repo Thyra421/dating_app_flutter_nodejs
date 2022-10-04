@@ -46,23 +46,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() => ElevatedButton(
       onPressed: _onSubmit,
       child:
-          const Text("LOGIN", style: TextStyle(fontWeight: FontWeight.bold)));
+          const Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold)));
 
   Widget _googleButton() => ElevatedButton(
       onPressed: _onSubmit,
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.white),
-          foregroundColor: MaterialStateProperty.all(Colors.red)),
-      child:
-          const Text("Google", style: TextStyle(fontWeight: FontWeight.bold)));
+      style:
+          ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
+      child: Image.asset("assets/google_logo.png", height: 30));
 
   Widget _facebookButton() => ElevatedButton(
       onPressed: _onSubmit,
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.white),
-          foregroundColor: MaterialStateProperty.all(Colors.blue)),
-      child: const Text("Facebook",
-          style: TextStyle(fontWeight: FontWeight.bold)));
+      style:
+          ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
+      child: Image.asset("assets/facebook_logo.png", height: 20));
 
   Widget _loginForm() => Form(
       key: _formKey,
@@ -71,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
         formatField(_passwordField())
       ]));
 
-  Widget _image() => Image.asset("lust.png", height: 400);
+  Widget _image() => Image.asset("assets/lust.png");
 
   Widget _register() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -88,16 +84,34 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
-          _image(),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _image()),
           _loginForm(),
-          formatButton(_submitButton()),
+          formatButtonFullRow(_submitButton()),
           const Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text("or", style: TextStyle(fontWeight: FontWeight.bold))),
-          formatButton(_googleButton()),
-          formatButton(_facebookButton()),
+              child: Center(
+                  child: Text("or continue with",
+                      style: TextStyle(fontWeight: FontWeight.bold)))),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: SizedBox(height: 50, child: _googleButton()))),
+                Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: SizedBox(height: 50, child: _facebookButton()))),
+              ],
+            ),
+          ),
           _register()
         ],
       ),

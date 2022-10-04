@@ -127,13 +127,13 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               _image(),
               _registerForm(),
-              formatButton(_submitButton()),
+              formatButtonFullRow(_submitButton()),
               const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text("or",
                       style: TextStyle(fontWeight: FontWeight.bold))),
-              formatButton(_googleButton()),
-              formatButton(_facebookButton()),
+              // formatButton(_googleButton()),
+              // formatButton(_facebookButton()),
               _login()
             ],
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const double kBorderRadius = 10;
-const Color kThemeColor = Color(0xFFE62020); // lust
+const Color kThemeColor = Color.fromARGB(255, 230, 32, 32); // lust
 
 MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
       50: kThemeColor,
@@ -17,6 +17,7 @@ MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
     });
 
 ThemeData darkTheme() => ThemeData(
+    canvasColor: const Color(0xFF121212),
     primarySwatch: _materialColor(),
     textTheme: const TextTheme(
         subtitle1: TextStyle(color: Colors.black)), // input field
