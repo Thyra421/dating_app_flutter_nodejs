@@ -1,6 +1,7 @@
 import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../global/format.dart';
 
@@ -22,7 +23,13 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePasswordConfirm = true;
 
   void _onSubmit() {
-    if (_formKey.currentState!.validate()) Navigation.home();
+    if (_formKey.currentState!.validate()) {
+      http.post(Uri.http('localhost:8080/register'), body: {
+        "username": _usernameController.text,
+        "password": _passwordController.text
+      });
+      Navigation.home();
+    }
   }
 
   void _toggleObscurePassword() =>
@@ -67,11 +74,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       _obscurePasswordConfirm ? Colors.grey : kThemeColor)),
               child: const Icon(Icons.remove_red_eye_rounded))),
       obscureText: _obscurePasswordConfirm,
-      validator: (s) => (s ?? "").isEmpty
-          ? "Please confirm your password"
-          : s == (_passwordController.text)
-              ? "Passwords don't match"
-              : null);
+      validator: (s) => null
+      // (s ?? "").isEmpty
+      //     ? "Please confirm your password"
+      //     : s == (_passwordController.text)
+      //         ? "Passwords don't match"
+      //         : null
+      );
 
   Widget _submitButton() => ElevatedButton(
       onPressed: _onSubmit,

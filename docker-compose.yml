@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    image: lust-server:latest
+    container_name: lust_server
+    restart: always
+    ports:
+      - "8080:8080"
+  db:
+    image: mongo
+    container_name: lust_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_volume:/home/thomas/db
+
+volumes:
+  db_volume:
