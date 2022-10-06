@@ -3,14 +3,15 @@ version: '3.8'
 services:
   server:
     build: ./server
-    image: lust-server:latest
-    container_name: lust_server
+    image: lust_server:latest
+    container_name: server
     restart: always
     ports:
       - "8080:8080"
   db:
-    image: mongo
-    container_name: lust_db
+    build: ./database
+    image: lust_db:latest
+    container_name: db
     restart: always
     ports:
       - "27017:27017"

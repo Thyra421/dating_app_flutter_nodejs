@@ -2,6 +2,7 @@ import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../global/api.dart';
 import '../global/format.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -20,8 +21,14 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePasswordText = true;
   bool _obscureConfirmPasswordText = true;
 
-  void _onSubmit() {
-    if (_formKey.currentState!.validate()) Navigation.home();
+  void _onSubmit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (await Api.register(
+        username: _mailController.text, password: _passwordController.text))
+      Navigation.home();
+    else
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("tg")));
   }
 
   void _toggleObscurePasswordText() =>
