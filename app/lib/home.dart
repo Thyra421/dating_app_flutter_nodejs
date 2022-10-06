@@ -11,12 +11,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: FutureWidget(
-        future: Api.login,
-        widget: Center(child: Icon(Icons.adjust_rounded)),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      const Scaffold(body: Center(child: Icon(Icons.adjust_rounded)));
 }

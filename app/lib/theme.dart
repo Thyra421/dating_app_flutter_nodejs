@@ -17,8 +17,10 @@ MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
     });
 
 ThemeData darkTheme() => ThemeData(
+    brightness: Brightness.dark,
     canvasColor: const Color(0xFF121212),
     primarySwatch: _materialColor(),
+    accentColor: _materialColor(),
     textTheme: const TextTheme(
         subtitle1: TextStyle(color: Colors.black)), // input field
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -26,8 +28,15 @@ ThemeData darkTheme() => ThemeData(
             shape: MaterialStateProperty.resolveWith((states) =>
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(kBorderRadius))))),
-    brightness: Brightness.dark,
+    dividerColor: Colors.grey.shade700,
+    snackBarTheme: SnackBarThemeData(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(kBorderRadius)),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        behavior: SnackBarBehavior.floating,
+        contentTextStyle: TextStyle(color: Colors.red)),
     inputDecorationTheme: InputDecorationTheme(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
       fillColor: Colors.white,
       floatingLabelStyle: const TextStyle(color: kThemeColor),
