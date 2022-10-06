@@ -12,10 +12,9 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
-
-const mongo_client = new mongo.MongoClient(MONGO_URL);
-const database = mongo_client.db("lust");
-const collection = database.collection("user");
+// const mongo_client = mongo.MongoClient(MONGO_URL);
+// const database = mongo_client.db("lust");
+// const collection = database.collection("user");
 
 app.listen(PORT, () => {
     console.log(`Server listening at http://localhost:${PORT}`)
@@ -25,21 +24,24 @@ app.get('/', (req, res) => {
     res.send("OK")
 })
 
-app.get('/login', (req, res) => {
-    var token = jwt.sign({ "username": "bob", "password": "pass1234" }, SECRET, { expiresIn: 20 })
+app.post('/login', (req, res) => {
+    console.log(req.body);
+    if (!((req.body.username ?? "") === 'bob' && (req.body.password ?? "") === 'pwd'))
+        return res.status(401).send("Wrong credentials")
+    var token = jwt.sign({ "username": "bob", "password": "pwd" }, SECRET, { expiresIn: 20 })
     res.send(token)
 })
 
 app.post('/register', async (req, res) => {
-    try {
-        const newUser = {
-            username: req.body.username,
-            password: req.body.password,
-        }
-        await collection.insertOne(newUser);
-    } finally {
-        await mongo_client.close()
-    }
+    // try {
+    //     const newUser = {
+    //         username: req.body.username,
+    //         password: req.body.password,
+    //     }
+    //     await collection.insertOne(newUser);
+    // } finally {
+    //     await mongo_client.close()
+    // }
     res.send("OK")
 })
 
