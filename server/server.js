@@ -4,7 +4,7 @@ const bodyParser = require("body-parser")
 const jwt = require("jsonwebtoken")
 const { MongoClient } = require('mongodb')
 
-const PORT = 8081
+const PORT = 8080
 const SECRET = "123"
 const MONGO_URL = "mongodb://localhost:27017/"
 
@@ -24,15 +24,23 @@ app.listen(PORT, () => {
 })
 
 app.get('/', (req, res) => {
-    res.send("OK")
+    return res.send("OK")
 })
 
-app.post('/login', (req, res) => {
-    console.log(req.body);
-    if (!((req.body.username ?? "") === 'bob' && (req.body.password ?? "") === 'pwd'))
-        return res.status(401).send("Wrong credentials")
-    var token = jwt.sign({ "username": "bob", "password": "pwd" }, SECRET, { expiresIn: 20 })
-    res.send(token)
+app.post('/login', async (req, res) => {
+    const query = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    if (await users.countDocuments(query) === 0)
+        return res.status(401).send("KO")
+
+    const cursor = await users.findOne(query)
+    console.log(cursor)
+
+    const token = jwt.sign(cursor, SECRET, { expiresIn: 20 })
+    return res.send(token)
 })
 
 app.post('/register', async (req, res) => {
@@ -41,5 +49,5 @@ app.post('/register', async (req, res) => {
         password: req.body.password
     }
     const result = await users.insertOne(newUser)
-    res.send(result)
+    return res.send("OK")
 })

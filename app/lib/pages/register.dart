@@ -24,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     if (await Api.register(
-        username: _mailController.text, password: _passwordController.text))
+        mail: _mailController.text, password: _passwordController.text))
       Navigation.home();
     else
       ScaffoldMessenger.of(context)

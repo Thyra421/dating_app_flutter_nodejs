@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     if (await Api.login(
-        username: _mailController.text, password: _passwordController.text))
+        mail: _mailController.text, password: _passwordController.text))
       Navigation.home();
     else
       ScaffoldMessenger.of(context)

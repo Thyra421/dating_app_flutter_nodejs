@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  server:
-    build: ./server
-    image: lust_server:latest
-    container_name: server
-    restart: always
-    ports:
-      - "8080:8080"
+#   server:
+#     build: ./server
+#     image: lust_server:latest
+#     container_name: server
+#     restart: always
+#     ports:
+#       - "8080:8080"
   db:
     build: ./database
     image: lust_db:latest
