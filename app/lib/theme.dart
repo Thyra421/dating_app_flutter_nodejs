@@ -29,12 +29,14 @@ ThemeData darkTheme() => ThemeData(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(kBorderRadius))))),
     dividerColor: Colors.grey.shade700,
+    listTileTheme: const ListTileThemeData(
+        textColor: Colors.white, tileColor: Colors.amber),
     snackBarTheme: SnackBarThemeData(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kBorderRadius)),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Colors.white,
         behavior: SnackBarBehavior.floating,
-        contentTextStyle: TextStyle(color: Colors.red)),
+        contentTextStyle: const TextStyle(color: Colors.red)),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
