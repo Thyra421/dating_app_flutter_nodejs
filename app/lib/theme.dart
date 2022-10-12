@@ -30,7 +30,7 @@ ThemeData darkTheme() => ThemeData(
                     borderRadius: BorderRadius.circular(kBorderRadius))))),
     dividerColor: Colors.grey.shade700,
     listTileTheme: const ListTileThemeData(
-        textColor: Colors.white, tileColor: Colors.amber),
+        textColor: Colors.white, tileColor: Color.fromARGB(255, 53, 53, 49)),
     snackBarTheme: SnackBarThemeData(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kBorderRadius)),

@@ -1,4 +1,4 @@
-import 'package:app/home.dart';
+import 'package:app/pages/home.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +12,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         navigatorKey: navigatorKey,
-        title: 'Flutter Demo',
+        title: 'Lust',
         debugShowCheckedModeBanner: false,
         theme: darkTheme(),
-        home: const Home(),
+        home: const LoginPage(),
       );
 }

@@ -27,32 +27,36 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
 
-  Widget _item(int index, String content) => Padding(
-      key: Key(content),
-      padding: const EdgeInsets.all(30),
-      child: ListTile(
+  Widget _item(int index, String content) => ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        key: Key(content),
         title: Text(content),
         trailing: ReorderableDragStartListener(
-            child: Icon(Icons.drag_handle), index: index),
-      ));
+            index: index, child: const Icon(Icons.drag_handle)),
+      );
 
   @override
-  Widget build(BuildContext context) => ReorderableListView(
-      buildDefaultDragHandles: false,
-      onReorder: (int oldIndex, int newIndex) {
-        setState(() {
-          if (oldIndex < newIndex) newIndex -= 1;
+  Widget build(BuildContext context) => Column(
+        children: [
+          _name(),
+          Expanded(
+            child: ReorderableListView(
+                buildDefaultDragHandles: false,
+                onReorder: (int oldIndex, int newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) newIndex -= 1;
 
-          final String old = _items.removeAt(oldIndex);
-          _items.insert(newIndex, old);
-        });
-      },
-      children:
-          _items.asMap().entries.map((e) => _item(e.key, e.value)).toList());
-  // return Column(
-  //   children: [
-  //     _name(),
-  //   ],
-  // );
-
+                    final String old = _items.removeAt(oldIndex);
+                    _items.insert(newIndex, old);
+                  });
+                },
+                children: _items
+                    .asMap()
+                    .entries
+                    .map((e) => _item(e.key, e.value))
+                    .toList()),
+          )
+        ],
+      );
 }

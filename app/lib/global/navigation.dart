@@ -2,7 +2,7 @@ import 'package:app/pages/login.dart';
 import 'package:app/pages/register.dart';
 import 'package:flutter/material.dart';
 
-import '../home.dart';
+import '../pages/home.dart';
 
 class Navigation {
   static late GlobalKey<NavigatorState> _navigatorKey;
