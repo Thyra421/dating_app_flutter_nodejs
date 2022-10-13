@@ -58,14 +58,21 @@ class _ProfilePageState extends State<ProfilePage> {
       });
 
   Widget _name() => Container(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.only(left: 30, top: 30, bottom: 30),
         color: Theme.of(context).canvasColor,
-        child: const Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "Willem Rebergen",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Willem Rebergen",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                  iconSize: 30,
+                  onPressed: () {},
+                  icon: const Icon(Icons.settings)),
+            )
+          ],
         ),
       );
 
@@ -96,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ));
 
   Widget _addingCard() => ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       title: Form(
           key: _formKey,
           child: TextFormField(
@@ -104,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration:
                   const InputDecoration(hintText: "What else do you like?"),
               validator: (String? value) => (value ?? "").isEmpty
-                  ? "Enter at least one character"
+                  ? "Please enter at least one character"
                   : null)),
       trailing:
           IconButton(icon: const Icon(Icons.check), onPressed: _onAddItem));

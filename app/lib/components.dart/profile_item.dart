@@ -44,7 +44,7 @@ class _ProfileItemCardState extends State<ProfileItemCard> {
   @override
   Widget build(BuildContext context) => ListTile(
       onTap: _toggleEditMode,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       title: _isEditMode
           ? Form(
               key: _formKey,
