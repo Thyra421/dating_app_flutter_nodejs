@@ -15,6 +15,6 @@ class App extends StatelessWidget {
         title: 'Lust',
         debugShowCheckedModeBanner: false,
         theme: darkTheme(),
-        home: const LoginPage(),
+        home: const Home(),
       );
 }

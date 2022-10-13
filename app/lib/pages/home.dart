@@ -10,15 +10,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _pages = [SearchPage(), ProfilePage()];
-  int _index = 0;
+  final List<Widget> _pages = [const SearchPage(), const ProfilePage()];
+  int _index = 1;
 
   @override
   Widget build(BuildContext context) => Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) => setState(() => _index = value),
         currentIndex: _index,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile")
         ],

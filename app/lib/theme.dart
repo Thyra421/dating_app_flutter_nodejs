@@ -17,10 +17,9 @@ MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
     });
 
 ThemeData darkTheme() => ThemeData(
-    brightness: Brightness.dark,
+    colorScheme: ColorScheme.fromSwatch(primarySwatch: _materialColor())
+        .copyWith(secondary: _materialColor(), brightness: Brightness.dark),
     canvasColor: const Color(0xFF121212),
-    primarySwatch: _materialColor(),
-    accentColor: _materialColor(),
     textTheme: const TextTheme(
         subtitle1: TextStyle(color: Colors.black)), // input field
     elevatedButtonTheme: ElevatedButtonThemeData(
