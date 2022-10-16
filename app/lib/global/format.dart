@@ -7,3 +7,9 @@ Widget formatFullRow({required Widget child}) => Padding(
           child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 50), child: child))
     ]));
+
+String formatItem(String item) {
+  item = item.trim();
+  item.replaceAll(RegExp(r"\s+"), " ");
+  return item;
+}

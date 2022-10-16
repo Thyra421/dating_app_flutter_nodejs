@@ -1,3 +1,5 @@
+import 'package:app/pages/home/profile/settings/language.dart';
+import 'package:app/pages/home/profile/settings.dart';
 import 'package:app/pages/login.dart';
 import 'package:app/pages/register.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ class Navigation {
         if (then != null) then();
       });
 
+  static void pop() => _navigatorKey.currentState!.pop();
+
   static void home({Function? then, bool replace = false}) =>
       _push(const Home(), replace: replace, then: then);
 
@@ -27,4 +31,10 @@ class Navigation {
 
   static void register({Function? then, bool replace = false}) =>
       _push(const RegisterPage(), replace: replace, then: then);
+
+  static void settings({Function? then, bool replace = false}) =>
+      _push(const SettingsPage(), replace: replace, then: then);
+
+  static void language({Function? then, bool replace = false}) =>
+      _push(const LanguagePage(), replace: replace, then: then);
 }

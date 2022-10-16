@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const double kBorderRadius = 10;
 const Color kThemeColor = Color.fromARGB(255, 230, 32, 32); // lust
+const Color kBackgroundColor = Color(0xFF121212);
 
 MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
       50: kThemeColor,
@@ -17,9 +18,11 @@ MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
     });
 
 ThemeData darkTheme() => ThemeData(
-    colorScheme: ColorScheme.fromSwatch(primarySwatch: _materialColor())
-        .copyWith(secondary: _materialColor(), brightness: Brightness.dark),
-    canvasColor: const Color(0xFF121212),
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: _materialColor(),
+      brightness: Brightness.dark,
+    ).copyWith(secondary: _materialColor()),
+    canvasColor: kBackgroundColor,
     textTheme: const TextTheme(
         subtitle1: TextStyle(color: Colors.black)), // input field
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -27,9 +30,24 @@ ThemeData darkTheme() => ThemeData(
             shape: MaterialStateProperty.resolveWith((states) =>
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(kBorderRadius))))),
+    appBarTheme: const AppBarTheme(
+        color: kBackgroundColor, shadowColor: Colors.transparent),
+    switchTheme: SwitchThemeData(
+        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
+      if (states.contains(MaterialState.selected))
+        return kThemeColor.withAlpha(100);
+      return Colors.grey.withAlpha(100);
+    }), thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
+      if (states.contains(MaterialState.selected)) return kThemeColor;
+      return Colors.grey;
+    })),
+    tabBarTheme: const TabBarTheme(
+        labelColor: kThemeColor,
+        unselectedLabelColor: Colors.white,
+        indicator: BoxDecoration(color: Colors.transparent)),
     dividerColor: Colors.grey.shade700,
     listTileTheme: const ListTileThemeData(
-        textColor: Colors.white, tileColor: Color.fromARGB(255, 45, 45, 44)),
+        textColor: Colors.white, tileColor: kBackgroundColor),
     snackBarTheme: SnackBarThemeData(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kBorderRadius)),

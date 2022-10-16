@@ -1,5 +1,6 @@
 import 'package:app/pages/home/profile.dart';
 import 'package:app/pages/home/search.dart';
+import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -11,17 +12,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final List<Widget> _pages = [const SearchPage(), const ProfilePage()];
-  int _index = 1;
+
+  Widget _navigationBar() => Container(
+        decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 1))),
+        child: const TabBar(tabs: [
+          SizedBox(height: 50, child: Icon(Icons.search)),
+          SizedBox(height: 50, child: Icon(Icons.person)),
+        ]),
+      );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) => setState(() => _index = value),
-        currentIndex: _index,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile")
-        ],
-      ),
-      body: _pages[_index]);
+  Widget build(BuildContext context) => DefaultTabController(
+      length: _pages.length,
+      child: Scaffold(
+          body: TabBarView(children: _pages),
+          bottomNavigationBar: _navigationBar()));
 }
