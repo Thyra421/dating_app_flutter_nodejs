@@ -1,6 +1,6 @@
-import { trySelectUser } from "../database/users.js"
-import { ErrorCodes } from "../error_codes.js"
-import { error, success } from "../utils/response.js"
+import { trySelectUser } from "../models/users.js"
+import { ErrorCodes } from "../config/error_codes.js"
+import { error, success } from "../utils/responses.js"
 import { generateToken } from "../utils/token.js"
 
 export async function login(req, res) {

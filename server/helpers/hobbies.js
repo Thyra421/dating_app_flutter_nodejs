@@ -1,7 +1,7 @@
-import { selectHobbies, replaceHobbies } from "../database/hobbies.js"
-import { ErrorCodes } from "../error_codes.js"
+import { selectHobbies, replaceHobbies } from "../models/hobbies.js"
+import { ErrorCodes } from "../config/error_codes.js"
 import { checkAuthorization } from "../utils/header.js"
-import { error, success } from "../utils/response.js"
+import { error, success } from "../utils/responses.js"
 
 export async function getHobbies(req, res) {
     const id = checkAuthorization(req.headers)

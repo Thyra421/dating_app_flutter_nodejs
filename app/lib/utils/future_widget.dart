@@ -8,7 +8,7 @@ class FutureWidget<T> extends StatefulWidget {
   });
 
   final Future<T> Function() future;
-  final Widget Function(T) widget;
+  final Widget widget;
 
   @override
   State<FutureWidget<T>> createState() => _FutureWidgetState<T>();
@@ -33,9 +33,7 @@ class _FutureWidgetState<T> extends State<FutureWidget<T>> {
 
   Widget _loading() => const Center(child: CircularProgressIndicator());
 
-  Widget _widget(T data) {
-    return widget.widget(data);
-  }
+  Widget _widget(T data) => widget.widget;
 
   Widget _buildState(BuildContext context, AsyncSnapshot<T> snapshot) {
     if (snapshot.hasError) return _error();

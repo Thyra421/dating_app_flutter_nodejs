@@ -21,12 +21,16 @@ class _SettingsPageState extends State<SettingsPage> {
     return;
   }
 
-  void _setValues(Map<String, dynamic> values) {
-    _appearOnRadar = values['appear_on_radar'] ?? false;
-    _trackMyPosition = values['track_position'] ?? false;
-    _notifications = values['notifications'] ?? false;
-    _darkMode = values['dark_mode'] ?? false;
+  Future<String> _setSetting(String name, dynamic value) async {
+    return Api.setSettings(name, value);
   }
+
+  void _setValues(Map<String, dynamic> values) => setState(() {
+        _appearOnRadar = values['appear_on_radar'] ?? false;
+        _trackMyPosition = values['track_position'] ?? false;
+        _notifications = values['notifications'] ?? false;
+        _darkMode = values['dark_mode'] ?? false;
+      });
 
   Widget _section(String name) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -51,8 +55,10 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment.centerRight,
               child: Switch(
                   value: _appearOnRadar,
-                  onChanged: (bool value) =>
-                      setState(() => _appearOnRadar = value)),
+                  onChanged: (bool value) {
+                    setState(() => _appearOnRadar = value);
+                    _setSetting('appear_on_radar', value);
+                  }),
             )
           ],
         ),
@@ -72,8 +78,10 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment.centerRight,
               child: Switch(
                   value: _trackMyPosition,
-                  onChanged: (bool value) =>
-                      setState(() => _trackMyPosition = value)),
+                  onChanged: (bool value) {
+                    _setSetting('track_position', value);
+                    setState(() => _trackMyPosition = value);
+                  }),
             )
           ],
         ),
@@ -93,8 +101,10 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment.centerRight,
               child: Switch(
                   value: _notifications,
-                  onChanged: (bool value) =>
-                      setState(() => _notifications = value)),
+                  onChanged: (bool value) {
+                    _setSetting('notifications', value);
+                    setState(() => _notifications = value);
+                  }),
             )
           ],
         ),
@@ -114,7 +124,10 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment.centerRight,
               child: Switch(
                   value: _darkMode,
-                  onChanged: (bool value) => setState(() => _darkMode = value)),
+                  onChanged: (bool value) {
+                    _setSetting('dark_mode', value);
+                    setState(() => _darkMode = value);
+                  }),
             )
           ],
         ),
@@ -156,10 +169,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(automaticallyImplyLeading: true),
       body: FutureWidget<Map<String, dynamic>>(
-        future: () => Api.getSettings(),
-        widget: (Map<String, dynamic> values) {
-          _setValues(values);
-          return ListView(children: [
+          future: () => Api.getSettings()..then(_setValues),
+          widget: ListView(children: [
             _section("Privacy"),
             _switchAppearOnRadar(),
             _switchTrackMyPosition(),
@@ -169,7 +180,5 @@ class _SettingsPageState extends State<SettingsPage> {
             _language(),
             _switchDarkMode(),
             _logoutButton(),
-          ]);
-        },
-      ));
+          ])));
 }

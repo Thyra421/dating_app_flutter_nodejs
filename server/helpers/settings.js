@@ -1,7 +1,7 @@
-import { selectSettings, replaceSettings } from "../database/settings.js"
-import { ErrorCodes } from "../error_codes.js"
+import { selectSettings, replaceSettings } from "../models/settings.js"
+import { ErrorCodes } from "../config/error_codes.js"
 import { checkAuthorization } from "../utils/header.js"
-import { error, success } from "../utils/response.js"
+import { error, success } from "../utils/responses.js"
 
 export async function getSettings(req, res) {
     const id = checkAuthorization(req.headers)

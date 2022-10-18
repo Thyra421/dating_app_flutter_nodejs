@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class Api {
   static const _kEndpoint = 'http://localhost:8080';
   static const _kTokenTest =
-      "eyJhbGciOiJIUzI1NiJ9.NjM0ZTlhOTc1ZjJjNGM4NjVhYzU2NGU0.dJN_-WGOXj4VdsYWDimAG8k-WyGFBZpFvQ8kHWU6HqE";
+      "eyJhbGciOiJIUzI1NiJ9.NjM0ZWJhM2IyOThjNTBiZjc2ZWNkMmI4.VBu5ep5UQjSNNC1ndcyWe1QsZ2Ep6wNw7U-1LYbl2kw";
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
 
@@ -23,7 +23,6 @@ class Api {
 
       if (response.statusCode != 200) {
         Map<String, dynamic> error = jsonDecode(response.body);
-        print(error);
         return Future.error("Error: ${error['value']}");
       }
 
@@ -54,9 +53,7 @@ class Api {
   static Future<Map<String, dynamic>> getSettings() async =>
       _request(query: () => http.get(_url('settings'), headers: _headers()));
 
-  static Future<Map<String, dynamic>> _setSettings(
-          String name, bool value) async =>
-      _request(
-          query: () => http
-              .put(_url('settings'), headers: _headers(), body: {name: value}));
+  static Future<String> setSettings(String name, bool value) async => _request(
+      query: () => http.put(_url('settings'),
+          headers: _headers(), body: jsonEncode({name: value})));
 }

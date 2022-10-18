@@ -1,9 +1,9 @@
-import { insertHobbies } from "../database/hobbies.js"
-import { insertSettings } from "../database/settings.js"
-import { insertUser, userExists } from "../database/users.js"
-import { DEFAULT_SETTINGS } from "../default_settings.js"
-import { ErrorCodes } from "../error_codes.js"
-import { error, success } from "../utils/response.js"
+import { insertHobbies } from "../models/hobbies.js"
+import { insertSettings } from "../models/settings.js"
+import { insertUser, userExists } from "../models/users.js"
+import { DEFAULT_SETTINGS } from "../config/default_settings.js"
+import { ErrorCodes } from "../config/error_codes.js"
+import { error, success } from "../utils/responses.js"
 
 export async function register(req, res) {
     const query = {
