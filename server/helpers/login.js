@@ -1,4 +1,4 @@
-import { trySelectUser } from "../database/database.js"
+import { trySelectUser } from "../database/users.js"
 import { ErrorCodes } from "../error_codes.js"
 import { error, success } from "../utils/response.js"
 import { generateToken } from "../utils/token.js"

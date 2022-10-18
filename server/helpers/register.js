@@ -1,4 +1,7 @@
-import { insertUser, userExists } from "../database/database.js"
+import { insertHobbies } from "../database/hobbies.js"
+import { insertSettings } from "../database/settings.js"
+import { insertUser, userExists } from "../database/users.js"
+import { DEFAULT_SETTINGS } from "../default_settings.js"
 import { ErrorCodes } from "../error_codes.js"
 import { error, success } from "../utils/response.js"
 
@@ -15,7 +18,21 @@ export async function register(req, res) {
         password: req.body.password
     }
 
-    insertUser(newUser)
+    const userId = await insertUser(newUser)
+
+    const newHobbies = {
+        user_id: userId,
+        hobbies: []
+    }
+
+    await insertHobbies(newHobbies)
+
+    const newSettings = {
+        user_id: userId,
+        settings: DEFAULT_SETTINGS
+    }
+
+    await insertSettings(newSettings)
 
     return success(res, "OK")
 }

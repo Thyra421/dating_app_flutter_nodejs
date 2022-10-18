@@ -3,7 +3,8 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import { login } from './helpers/login.js'
 import { register } from './helpers/register.js'
-import { addHobbies, getHobbies } from './helpers/hobbies.js'
+import { setHobbies, getHobbies } from './helpers/hobbies.js'
+import { getSettings, setSettings } from './helpers/settings.js'
 
 const PORT = 8080
 
@@ -25,4 +26,8 @@ app.post('/register', register)
 
 app.get('/hobbies', getHobbies)
 
-app.post('/hobbies', addHobbies)
+app.put('/hobbies', setHobbies)
+
+app.get('/settings', getSettings)
+
+app.put('/settings', setSettings)
