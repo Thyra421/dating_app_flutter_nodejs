@@ -11,6 +11,8 @@ export async function getSettings(req, res) {
     const query = { user_id: id }
 
     const settings = await selectSettings(query)
+    if (settings === null)
+        return error(res, ErrorCodes.NOT_FOUND)
     return success(res, settings.settings)
 }
 
@@ -20,7 +22,7 @@ export async function setSettings(req, res) {
         return error(res, ErrorCodes.FORBIDDEN)
 
     const query = { user_id: id }
-    const newSettings = { settings: req.body }
+    const newSettings = req.body
 
     await replaceSettings(query, newSettings)
     return success(res, "OK")

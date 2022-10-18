@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:app/components.dart/profile_item.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
-import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage>
   final TextEditingController _addTextController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late int _randomId;
+  late int _randomTipId;
 
   List<String> _itemsList = [
     "Star Wars",
@@ -54,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   void _onRemoveItem(String item) => setState(() => _itemsList.remove(item));
 
-  void _onOtherTip() => _randomId = Random().nextInt(_ideas.length);
+  void _onOtherTip() => _randomTipId = Random().nextInt(_ideas.length);
 
   void _onEditItem(String oldValue, String newValue) => setState(() {
         int index = _itemsList.indexOf(oldValue);
@@ -148,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage>
               const TextSpan(text: "No more idea? "),
               const TextSpan(text: "Try adding "),
               TextSpan(
-                  text: _ideas[_randomId],
+                  text: _ideas[_randomTipId],
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               const TextSpan(text: " you like.")
             ])),

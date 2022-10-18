@@ -20,7 +20,15 @@ export async function insertSettings(newSettings) {
 }
 
 export async function replaceSettings(query, newSettings) {
-    const setNewSettings = { "$set": newSettings }
-    const a = await settings.updateOne(query, setNewSettings)
+    const newSettingsEntries = Object.entries(newSettings)
+
+    const setNewSettingsEntries = newSettingsEntries.map(s => {
+        s[0] = `settings.${s[0]}`
+        return s
+    })
+
+    const setNewSettings = { "$set": Object.fromEntries(setNewSettingsEntries) }
+
+    await settings.updateOne(query, setNewSettings)
 
 }

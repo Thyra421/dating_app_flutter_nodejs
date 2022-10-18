@@ -1,4 +1,6 @@
+import 'package:app/global/api.dart';
 import 'package:app/global/navigation.dart';
+import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -9,16 +11,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _appearOnRadar = true;
+  bool _appearOnRadar = false;
+  bool _trackMyPosition = false;
   bool _notifications = false;
-  bool _darkMode = true;
+  bool _darkMode = false;
 
   void _onLogout() {
     Navigation.login(replace: true);
     return;
   }
 
-  void _toggleSetting(bool setting) => setState(() => setting = !setting);
+  void _setValues(Map<String, dynamic> values) {
+    _appearOnRadar = values['appear_on_radar'] ?? false;
+    _trackMyPosition = values['track_position'] ?? false;
+    _notifications = values['notifications'] ?? false;
+    _darkMode = values['dark_mode'] ?? false;
+  }
 
   Widget _section(String name) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -45,6 +53,27 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: _appearOnRadar,
                   onChanged: (bool value) =>
                       setState(() => _appearOnRadar = value)),
+            )
+          ],
+        ),
+      );
+
+  Widget _switchTrackMyPosition() => _setting(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: const [
+              Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Icon(Icons.my_location)),
+              Text("Track my position")
+            ]),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Switch(
+                  value: _trackMyPosition,
+                  onChanged: (bool value) =>
+                      setState(() => _trackMyPosition = value)),
             )
           ],
         ),
@@ -125,16 +154,22 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(automaticallyImplyLeading: true),
-        body: ListView(children: [
-          _section("Privacy"),
-          _switchAppearOnRadar(),
-          _section("Notifications"),
-          _switchNotifications(),
-          _section("Display"),
-          _language(),
-          _switchDarkMode(),
-          _logoutButton(),
-        ]),
-      );
+      appBar: AppBar(automaticallyImplyLeading: true),
+      body: FutureWidget<Map<String, dynamic>>(
+        future: () => Api.getSettings(),
+        widget: (Map<String, dynamic> values) {
+          _setValues(values);
+          return ListView(children: [
+            _section("Privacy"),
+            _switchAppearOnRadar(),
+            _switchTrackMyPosition(),
+            _section("Notifications"),
+            _switchNotifications(),
+            _section("Display"),
+            _language(),
+            _switchDarkMode(),
+            _logoutButton(),
+          ]);
+        },
+      ));
 }
