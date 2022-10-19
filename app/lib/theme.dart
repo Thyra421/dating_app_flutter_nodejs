@@ -23,6 +23,7 @@ ThemeData darkTheme() => ThemeData(
       brightness: Brightness.dark,
     ).copyWith(secondary: _materialColor()),
     canvasColor: kBackgroundColor,
+    hintColor: Colors.grey,
     textTheme: const TextTheme(
         subtitle1: TextStyle(color: Colors.black)), // input field
     elevatedButtonTheme: ElevatedButtonThemeData(
