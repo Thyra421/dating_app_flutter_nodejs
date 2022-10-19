@@ -17,15 +17,15 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _darkMode = false;
 
   void _onLogout() {
+    Api.logout();
     Navigation.login(replace: true);
-    return;
   }
 
-  Future<String> _setSetting(String name, dynamic value) async {
-    return Api.setSettings(name, value);
+  Future<void> _setSetting(String name, dynamic value) async {
+    return await Api.setSettings(name, value);
   }
 
-  void _setValues(Map<String, dynamic> values) => setState(() {
+  void _getSettings(Map<String, dynamic> values) => setState(() {
         _appearOnRadar = values['appear_on_radar'] ?? false;
         _trackMyPosition = values['track_position'] ?? false;
         _notifications = values['notifications'] ?? false;
@@ -169,7 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(automaticallyImplyLeading: true),
       body: FutureWidget<Map<String, dynamic>>(
-          future: () => Api.getSettings()..then(_setValues),
+          future: () => Api.getSettings()..then(_getSettings, onError: (_) {}),
           widget: ListView(children: [
             _section("Privacy"),
             _switchAppearOnRadar(),

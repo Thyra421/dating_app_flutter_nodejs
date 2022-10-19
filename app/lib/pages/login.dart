@@ -19,13 +19,15 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   void _onSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (await Api.login(
-        mail: _mailController.text, password: _passwordController.text))
+    try {
+      if (!_formKey.currentState!.validate()) return;
+      await Api.login(
+          mail: _mailController.text, password: _passwordController.text);
       Navigation.home();
-    else
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Wrong credential")));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
+    }
   }
 
   void _toggleObscureText() => setState(() => _obscureText = !_obscureText);

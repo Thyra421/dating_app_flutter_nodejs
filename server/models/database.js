@@ -1,8 +1,7 @@
 import { MongoClient } from 'mongodb'
+import { DB_URL } from '../config/db_url.js'
 
-const MONGO_URL = "mongodb://localhost:27017/"
-
-const mongo = new MongoClient(MONGO_URL)
+const mongo = new MongoClient(DB_URL)
 mongo.connect()
 
 const database = mongo.db('lust')

@@ -4,6 +4,7 @@ import { insertUser, userExists } from "../models/users.js"
 import { DEFAULT_SETTINGS } from "../config/default_settings.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { error, success } from "../utils/responses.js"
+import { generateToken } from "../utils/token.js"
 
 export async function register(req, res) {
     const query = {
@@ -34,5 +35,7 @@ export async function register(req, res) {
 
     await insertSettings(newSettings)
 
-    return success(res, "OK")
+    const token = generateToken(userId)
+
+    return success(res, token)
 }

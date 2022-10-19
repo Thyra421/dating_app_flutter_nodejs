@@ -14,9 +14,9 @@ export async function login(req, res) {
     if (user === null)
         return error(res, ErrorCodes.USER_NOT_FOUND)
 
-    const id = user._id.toString()
+    const user_id = user._id.toString()
 
-    const token = generateToken(id)
+    const token = generateToken(user_id)
 
     return success(res, token)
 }

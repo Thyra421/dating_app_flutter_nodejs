@@ -22,13 +22,15 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscureConfirmPasswordText = true;
 
   void _onSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (await Api.register(
-        mail: _mailController.text, password: _passwordController.text))
+    try {
+      if (!_formKey.currentState!.validate()) return;
+      await Api.register(
+          mail: _mailController.text, password: _passwordController.text);
       Navigation.home();
-    else
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("tg")));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
+    }
   }
 
   void _toggleObscurePasswordText() =>

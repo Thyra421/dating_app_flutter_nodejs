@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:app/components.dart/profile_item.dart';
+import 'package:app/global/api.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
+import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,13 +20,7 @@ class _ProfilePageState extends State<ProfilePage>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late int _randomTipId;
 
-  List<String> _itemsList = [
-    "Star Wars",
-    "Party",
-    "Pizza",
-    "Reading",
-    "The Rock",
-  ];
+  List<String> _itemsList = [];
 
   static const List<String> _ideas = [
     "a movie",
@@ -42,21 +38,32 @@ class _ProfilePageState extends State<ProfilePage>
     "a music instrument"
   ];
 
-  void _onAddItem() {
+  void _onAddItem() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _itemsList.add(formatItem(_addTextController.text)));
+    Api.setHobbies(_itemsList);
     _addTextController.clear();
     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
   }
 
-  void _onRemoveItem(String item) => setState(() => _itemsList.remove(item));
+  void _onRemoveItem(String item) {
+    setState(() => _itemsList.remove(item));
+    Api.setHobbies(_itemsList);
+  }
 
   void _onOtherTip() => _randomTipId = Random().nextInt(_ideas.length);
 
-  void _onEditItem(String oldValue, String newValue) => setState(() {
-        int index = _itemsList.indexOf(oldValue);
-        _itemsList[index] = formatItem(newValue);
+  void _onEditItem(String oldValue, String newValue) {
+    setState(() {
+      int index = _itemsList.indexOf(oldValue);
+      _itemsList[index] = formatItem(newValue);
+    });
+    Api.setHobbies(_itemsList);
+  }
+
+  void _getItemsList(List<String> itemsList) => setState(() {
+        _itemsList = itemsList;
       });
 
   String? _onValidate(String? value) {
@@ -177,16 +184,18 @@ class _ProfilePageState extends State<ProfilePage>
     return Column(children: [
       _name(),
       _youLike(),
-      Expanded(
-          child: ListView(
-        padding: const EdgeInsets.only(bottom: 30),
-        controller: _scrollController,
-        children: [
-          _items(),
-          _addingCard(),
-          _noMoreIdea(),
-        ],
-      ))
+      FutureWidget(
+          future: () => Api.getHobbies()..then(_getItemsList, onError: (_) {}),
+          widget: Expanded(
+              child: ListView(
+            padding: const EdgeInsets.only(bottom: 30),
+            controller: _scrollController,
+            children: [
+              _items(),
+              _addingCard(),
+              _noMoreIdea(),
+            ],
+          )))
     ]);
   }
 }
