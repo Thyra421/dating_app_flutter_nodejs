@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const double kBorderRadius = 10;
 const Color kThemeColor = Color.fromARGB(255, 230, 32, 32); // lust
 const Color kBackgroundColor = Color(0xFF121212);
+const double kHorizontalPadding = 30;
 
 MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
       50: kThemeColor,

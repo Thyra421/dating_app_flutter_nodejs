@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (!_formKey.currentState!.validate()) return;
       await Api.register(
           mail: _mailController.text, password: _passwordController.text);
-      Navigation.home();
+      Navigation.identity(replace: true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
@@ -90,7 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
           child: const Text("Register",
               style: TextStyle(fontWeight: FontWeight.bold))));
 
-  Widget _or() => const Divider(indent: 30, endIndent: 30, thickness: 1);
+  Widget _or() => const Divider(
+      indent: kHorizontalPadding, endIndent: kHorizontalPadding, thickness: 1);
 
   Widget _googleButton() => formatFullRow(
         child: ElevatedButton(

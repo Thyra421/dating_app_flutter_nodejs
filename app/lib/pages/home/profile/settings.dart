@@ -3,6 +3,9 @@ import 'package:app/global/navigation.dart';
 import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../global/format.dart';
+import '../../../theme.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -32,13 +35,8 @@ class _SettingsPageState extends State<SettingsPage> {
         _darkMode = values['dark_mode'] ?? false;
       });
 
-  Widget _section(String name) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Text(name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)));
-
   Widget _setting({required Widget child}) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: SizedBox(height: 70, child: child));
 
   Widget _switchAppearOnRadar() => _setting(
@@ -158,12 +156,14 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-  Widget _logoutButton() => TextButton(
-      style: ButtonStyle(
-          textStyle: MaterialStateProperty.all(
-              const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))),
-      onPressed: _onLogout,
-      child: const Text("Sign out"));
+  Widget _logoutButton() => Center(
+        child: TextButton(
+            style: ButtonStyle(
+                textStyle: MaterialStateProperty.all(const TextStyle(
+                    color: Colors.red, fontWeight: FontWeight.bold))),
+            onPressed: _onLogout,
+            child: const Text("Sign out")),
+      );
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -171,12 +171,12 @@ class _SettingsPageState extends State<SettingsPage> {
       body: FutureWidget<Map<String, dynamic>>(
           future: () => Api.getSettings()..then(_getSettings, onError: (_) {}),
           widget: ListView(children: [
-            _section("Privacy"),
+            section("Privacy"),
             _switchAppearOnRadar(),
             _switchTrackMyPosition(),
-            _section("Notifications"),
+            section("Notifications"),
             _switchNotifications(),
-            _section("Display"),
+            section("Display"),
             _language(),
             _switchDarkMode(),
             _logoutButton(),

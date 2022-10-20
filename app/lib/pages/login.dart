@@ -65,7 +65,8 @@ class _LoginPageState extends State<LoginPage> {
           child: const Text("Sign in",
               style: TextStyle(fontWeight: FontWeight.bold))));
 
-  Widget _or() => const Divider(indent: 30, endIndent: 30, thickness: 1);
+  Widget _or() => const Divider(
+      indent: kHorizontalPadding, endIndent: kHorizontalPadding, thickness: 1);
 
   Widget _googleButton() => formatFullRow(
         child: ElevatedButton(

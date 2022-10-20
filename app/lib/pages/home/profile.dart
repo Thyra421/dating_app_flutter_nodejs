@@ -3,6 +3,7 @@ import 'package:app/components.dart/profile_item.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
+import 'package:app/theme.dart';
 import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -106,7 +107,8 @@ class _ProfilePageState extends State<ProfilePage>
       );
 
   Widget _youLike() => Container(
-        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
+        padding: const EdgeInsets.only(
+            left: kHorizontalPadding, right: kHorizontalPadding, bottom: 30),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(

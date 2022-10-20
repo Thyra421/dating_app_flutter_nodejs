@@ -1,3 +1,4 @@
+import 'package:app/pages/getting_started.dart';
 import 'package:app/pages/home/profile/settings/language.dart';
 import 'package:app/pages/home/profile/settings.dart';
 import 'package:app/pages/login.dart';
@@ -5,6 +6,7 @@ import 'package:app/pages/register.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/home.dart';
+import '../pages/identity.dart';
 
 class Navigation {
   static late GlobalKey<NavigatorState> _navigatorKey;
@@ -37,4 +39,10 @@ class Navigation {
 
   static void language({Function? then, bool replace = false}) =>
       _push(const LanguagePage(), replace: replace, then: then);
+
+  static void identity({Function? then, bool replace = false}) =>
+      _push(const IdentityPage(), replace: replace, then: then);
+
+  static void gettingStarted({Function? then, bool replace = false}) =>
+      _push(const GettingStartedPage(), replace: replace, then: then);
 }
