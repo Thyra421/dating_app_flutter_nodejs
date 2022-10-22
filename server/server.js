@@ -6,6 +6,7 @@ import { register } from './helpers/register.js'
 import { setHobbies, getHobbies } from './helpers/hobbies.js'
 import { getSettings, setSettings } from './helpers/settings.js'
 import { SERVER_PORT } from './config/port.js'
+import { getSteps, setSteps } from './helpers/steps.js'
 
 const app = express()
 app.use(cors())
@@ -30,3 +31,7 @@ app.put('/hobbies', setHobbies)
 app.get('/settings', getSettings)
 
 app.put('/settings', setSettings)
+
+app.get('/steps', getSteps)
+
+app.put('/steps', setSteps)

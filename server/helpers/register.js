@@ -1,41 +1,31 @@
 import { insertHobbies } from "../models/hobbies.js"
 import { insertSettings } from "../models/settings.js"
 import { insertUser, userExists } from "../models/users.js"
-import { DEFAULT_SETTINGS } from "../config/default_settings.js"
+import { DEFAULT_SETTINGS, DEFAULT_STEPS } from "../config/default.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { error, success } from "../utils/responses.js"
 import { generateToken } from "../utils/token.js"
+import { insertSteps } from "../models/steps.js"
 
 export async function register(req, res) {
-    const query = {
-        mail: req.body.mail
-    }
-
+    /// Check if user alread exists    
+    const query = { mail: req.body.mail }
     if (await userExists(query))
         return error(res, ErrorCodes.USER_ALREADY_EXISTS)
 
-    const newUser = {
-        mail: req.body.mail,
-        password: req.body.password
-    }
+    /// Create new user
+    const newUser = { mail: req.body.mail, password: req.body.password }
+    const newUserId = await insertUser(newUser)
 
-    const userId = await insertUser(newUser)
-
-    const newHobbies = {
-        user_id: userId,
-        hobbies: []
-    }
-
+    /// Create resources for the user
+    const newHobbies = { userId: newUserId, hobbies: [] }
+    const newSettings = { userId: newUserId, settings: DEFAULT_SETTINGS }
+    const newSteps = { userId: newUserId, steps: DEFAULT_STEPS }
     await insertHobbies(newHobbies)
-
-    const newSettings = {
-        user_id: userId,
-        settings: DEFAULT_SETTINGS
-    }
-
     await insertSettings(newSettings)
+    await insertSteps(newSteps)
 
-    const token = generateToken(userId)
-
+    /// Generate jwt 
+    const token = generateToken(newUserId)
     return success(res, token)
 }
