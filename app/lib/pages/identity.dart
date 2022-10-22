@@ -3,6 +3,8 @@ import 'package:app/global/navigation.dart';
 import 'package:app/utils/dropdown_list.dart';
 import 'package:flutter/material.dart';
 
+import '../global/api.dart';
+
 class IdentityPage extends StatefulWidget {
   const IdentityPage({super.key});
 
@@ -16,9 +18,11 @@ class _IdentityPageState extends State<IdentityPage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
 
-  void _onClickNext() {
-    if (_formKey.currentState!.validate())
+  void _onClickNext() async {
+    if (_formKey.currentState!.validate()) {
+      await Api.setSteps('identity', true);
       Navigation.gettingStarted(replace: true);
+    }
   }
 
   Widget _firstName() => formatFullRow(

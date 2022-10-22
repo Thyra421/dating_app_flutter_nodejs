@@ -1,3 +1,4 @@
+import 'package:app/global/api.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
@@ -11,11 +12,13 @@ class GettingStartedPage extends StatefulWidget {
 }
 
 class _GettingStartedPageState extends State<GettingStartedPage> {
-  void _onClickDone() {
+  void _onClickDone() async {
+    await Api.setSteps('gettingStarted', true);
     Navigation.home(replace: true);
   }
 
-  void _onClickSkip() {
+  void _onClickSkip() async {
+    await Api.setSteps('gettingStarted', true);
     Navigation.home(replace: true);
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:app/global/storage.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -10,7 +11,7 @@ class Api {
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
 
-  static void _setToken(String token) => _token = token;
+  static void setToken(String token) => _token = token;
 
   static Map<String, String> _headers({bool authorization = true}) {
     Map<String, String> headers = {'content-type': 'application/json'};
@@ -37,6 +38,7 @@ class Api {
 
   static void logout() {
     _token = "";
+    clearStorage('token');
   }
 
   static Future<void> login({
@@ -47,7 +49,10 @@ class Api {
           query: () => http.post(_url('login'),
               headers: _headers(authorization: false),
               body: jsonEncode({"mail": mail, 'password': password})),
-          onSuccess: (String body) => _setToken(body));
+          onSuccess: (String body) {
+            setToken(body);
+            writeStorage('token', body);
+          });
 
   static Future<void> register({
     required String mail,
@@ -57,7 +62,10 @@ class Api {
           query: () => http.post(_url('register'),
               headers: _headers(authorization: false),
               body: jsonEncode({"mail": mail, 'password': password})),
-          onSuccess: (String body) => _setToken(body));
+          onSuccess: (String body) {
+            setToken(body);
+            writeStorage('token', body);
+          });
 
   static Future<Map<String, dynamic>> getSettings() async => _request(
       query: () => http.get(_url('settings'), headers: _headers()),
@@ -75,5 +83,14 @@ class Api {
   static Future<void> setHobbies(List<String> hobbies) async => _request(
       query: () => http.put(_url('hobbies'),
           headers: _headers(), body: jsonEncode(hobbies)),
+      onSuccess: (_) => {});
+
+  static Future<Map<String, dynamic>> getSteps() async => _request(
+      query: () => http.get(_url('steps'), headers: _headers()),
+      onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
+
+  static Future<void> setSteps(String name, bool value) async => _request(
+      query: () => http.put(_url('steps'),
+          headers: _headers(), body: jsonEncode({name: value})),
       onSuccess: (_) => {});
 }
