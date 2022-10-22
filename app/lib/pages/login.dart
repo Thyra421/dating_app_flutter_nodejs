@@ -23,7 +23,11 @@ class _LoginPageState extends State<LoginPage> {
       if (!_formKey.currentState!.validate()) return;
       await Api.login(
           mail: _mailController.text, password: _passwordController.text);
-      Navigation.home();
+      Map<String, dynamic> steps = await Api.getSteps();
+      if (!steps['identity']) return Navigation.identity(replace: true);
+      if (!steps['gettingStarted'])
+        return Navigation.gettingStarted(replace: true);
+      return Navigation.home(replace: true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text((e as Map<String, dynamic>)['value'])));

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:app/global/api.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/global/storage.dart';
@@ -11,6 +14,13 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  static const double _scaleBig = .8;
+  static const double _scaleSmall = .7;
+  static const Duration _speed = Duration(milliseconds: 200);
+  late Timer _timer;
+  double _scale = _scaleBig;
+  int _counter = 0;
+
   void _dispatch() async {
     String token = readStorage('token');
     Api.setToken(token);
@@ -26,16 +36,32 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(
+        _speed,
+        (Timer timer) => setState(() {
+              _counter = (_counter + 1) % 10;
+              if (_counter >= 4) return;
+              if (_scale == _scaleBig)
+                _scale = _scaleSmall;
+              else
+                _scale = _scaleBig;
+            }));
     _dispatch();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Center(
-              child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50),
-        child: Image.asset('assets/images/lust.png'),
-      )));
+      body: Center(
+          child: AnimatedScale(
+              duration: _speed,
+              scale: _scale,
+              child: Image.asset('assets/images/lust.png'))));
 }

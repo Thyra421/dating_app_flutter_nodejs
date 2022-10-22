@@ -2,7 +2,7 @@ export const DEFAULT_SETTINGS = {
     notifications: true,
     appearOnRadar: true,
     trackPosition: true,
-    language: "en-US",
+    language: "English US",
     darkMode: true
 }
 
@@ -10,4 +10,11 @@ export const DEFAULT_STEPS = {
     confirmMail: false,
     identity: false,
     gettingStarted: false
+}
+
+export const DEFAULT_IDENTITY = {
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    gender: ""
 }

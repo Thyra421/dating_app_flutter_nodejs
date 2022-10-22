@@ -16,13 +16,13 @@ class _LanguagePageState extends State<LanguagePage> {
     "English US",
     "English UK",
     "Español ES",
-    "中文 CH",
+    "中文 ZH",
     "Русский RU",
     "Italiano IT"
   ];
 
   Widget _language(String language) => InkWell(
-      onTap: Navigation.pop,
+      onTap: () => Navigation.pop(language),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Container(

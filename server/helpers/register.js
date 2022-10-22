@@ -1,11 +1,12 @@
 import { insertHobbies } from "../models/hobbies.js"
 import { insertSettings } from "../models/settings.js"
 import { insertUser, userExists } from "../models/users.js"
-import { DEFAULT_SETTINGS, DEFAULT_STEPS } from "../config/default.js"
+import { DEFAULT_IDENTITY, DEFAULT_SETTINGS, DEFAULT_STEPS } from "../config/default.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { error, success } from "../utils/responses.js"
 import { generateToken } from "../utils/token.js"
 import { insertSteps } from "../models/steps.js"
+import { insertIdentity } from "../models/identity.js"
 
 export async function register(req, res) {
     /// Check if user alread exists    
@@ -21,9 +22,11 @@ export async function register(req, res) {
     const newHobbies = { userId: newUserId, hobbies: [] }
     const newSettings = { userId: newUserId, settings: DEFAULT_SETTINGS }
     const newSteps = { userId: newUserId, steps: DEFAULT_STEPS }
+    const newIdentity = { userId: newUserId, identity: DEFAULT_IDENTITY }
     await insertHobbies(newHobbies)
     await insertSettings(newSettings)
     await insertSteps(newSteps)
+    await insertIdentity(newIdentity)
 
     /// Generate jwt 
     const token = generateToken(newUserId)

@@ -13,12 +13,12 @@ class GettingStartedPage extends StatefulWidget {
 
 class _GettingStartedPageState extends State<GettingStartedPage> {
   void _onClickDone() async {
-    await Api.setSteps('gettingStarted', true);
+    await Api.setSteps(gettingStarted: true);
     Navigation.home(replace: true);
   }
 
   void _onClickSkip() async {
-    await Api.setSteps('gettingStarted', true);
+    await Api.setSteps(gettingStarted: true);
     Navigation.home(replace: true);
   }
 

@@ -13,11 +13,10 @@ class Api {
 
   static void setToken(String token) => _token = token;
 
-  static Map<String, String> _headers({bool authorization = true}) {
-    Map<String, String> headers = {'content-type': 'application/json'};
-    if (authorization) headers.addEntries({"Authorization": _token}.entries);
-    return headers;
-  }
+  static Map<String, String> _headers({bool authorization = true}) => {
+        'content-type': 'application/json',
+        if (authorization) "Authorization": _token
+      };
 
   static Future<T> _request<T>({
     required Future<http.Response> Function() query,
@@ -48,7 +47,10 @@ class Api {
       _request(
           query: () => http.post(_url('login'),
               headers: _headers(authorization: false),
-              body: jsonEncode({"mail": mail, 'password': password})),
+              body: jsonEncode({
+                "mail": mail,
+                'password': password,
+              })),
           onSuccess: (String body) {
             setToken(body);
             writeStorage('token', body);
@@ -71,10 +73,24 @@ class Api {
       query: () => http.get(_url('settings'), headers: _headers()),
       onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
 
-  static Future<void> setSettings(String name, bool value) async => _request(
-      query: () => http.put(_url('settings'),
-          headers: _headers(), body: jsonEncode({name: value})),
-      onSuccess: (_) => {});
+  static Future<void> setSettings({
+    bool? notifications,
+    bool? appearOnRadar,
+    bool? trackPosition,
+    bool? darkMode,
+    String? language,
+  }) async =>
+      _request(
+          query: () => http.put(_url('settings'),
+              headers: _headers(),
+              body: jsonEncode({
+                if (notifications != null) "notifications": notifications,
+                if (appearOnRadar != null) "appearOnRadar": appearOnRadar,
+                if (trackPosition != null) "trackPosition": trackPosition,
+                if (darkMode != null) "darkMode": darkMode,
+                if (language != null) "language": language,
+              })),
+          onSuccess: (_) => {});
 
   static Future<List<String>> getHobbies() async => _request(
       query: () => http.get(_url('hobbies'), headers: _headers()),
@@ -89,8 +105,39 @@ class Api {
       query: () => http.get(_url('steps'), headers: _headers()),
       onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
 
-  static Future<void> setSteps(String name, bool value) async => _request(
-      query: () => http.put(_url('steps'),
-          headers: _headers(), body: jsonEncode({name: value})),
-      onSuccess: (_) => {});
+  static Future<void> setSteps({
+    bool? identity,
+    bool? gettingStarted,
+    bool? confirmMail,
+  }) async =>
+      _request(
+          query: () => http.put(_url('steps'),
+              headers: _headers(),
+              body: jsonEncode({
+                if (identity != null) "identity": identity,
+                if (gettingStarted != null) "gettingStarted": gettingStarted,
+                if (confirmMail != null) "confirmMail": confirmMail,
+              })),
+          onSuccess: (_) => {});
+
+  static Future<Map<String, dynamic>> getIdentity() async => _request(
+      query: () => http.get(_url('identity'), headers: _headers()),
+      onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
+
+  static Future<void> setIdentity({
+    String? firstName,
+    String? lastName,
+    String? gender,
+    String? dateOfBirth,
+  }) async =>
+      _request(
+          query: () => http.put(_url('identity'),
+              headers: _headers(),
+              body: jsonEncode({
+                if (firstName != null) 'firstName': firstName,
+                if (lastName != null) 'lastName': lastName,
+                if (gender != null) 'gender': gender,
+                if (dateOfBirth != null) 'dateOfBirth': dateOfBirth
+              })),
+          onSuccess: (_) => {});
 }

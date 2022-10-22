@@ -18,21 +18,35 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _trackMyPosition = false;
   bool _notifications = false;
   bool _darkMode = false;
+  String _language = "";
 
   void _onLogout() {
     Api.logout();
     Navigation.login(replace: true);
   }
 
-  Future<void> _setSetting(String name, dynamic value) async {
-    return await Api.setSettings(name, value);
+  Future<void> _setSetting({
+    bool? notifications,
+    bool? appearOnRadar,
+    bool? trackPosition,
+    bool? darkMode,
+    String? language,
+  }) async {
+    return await Api.setSettings(
+      notifications: notifications,
+      appearOnRadar: appearOnRadar,
+      trackPosition: trackPosition,
+      darkMode: darkMode,
+      language: language,
+    );
   }
 
   void _getSettings(Map<String, dynamic> values) => setState(() {
-        _appearOnRadar = values['appear_on_radar'] ?? false;
-        _trackMyPosition = values['track_position'] ?? false;
+        _appearOnRadar = values['appearOnRadar'] ?? false;
+        _trackMyPosition = values['trackPosition'] ?? false;
         _notifications = values['notifications'] ?? false;
-        _darkMode = values['dark_mode'] ?? false;
+        _darkMode = values['darkMode'] ?? false;
+        _language = values['language'] ?? "";
       });
 
   Widget _setting({required Widget child}) => Padding(
@@ -55,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: _appearOnRadar,
                   onChanged: (bool value) {
                     setState(() => _appearOnRadar = value);
-                    _setSetting('appear_on_radar', value);
+                    _setSetting(appearOnRadar: value);
                   }),
             )
           ],
@@ -77,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Switch(
                   value: _trackMyPosition,
                   onChanged: (bool value) {
-                    _setSetting('track_position', value);
+                    _setSetting(trackPosition: value);
                     setState(() => _trackMyPosition = value);
                   }),
             )
@@ -100,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Switch(
                   value: _notifications,
                   onChanged: (bool value) {
-                    _setSetting('notifications', value);
+                    _setSetting(notifications: value);
                     setState(() => _notifications = value);
                   }),
             )
@@ -123,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Switch(
                   value: _darkMode,
                   onChanged: (bool value) {
-                    _setSetting('dark_mode', value);
+                    _setSetting(darkMode: value);
                     setState(() => _darkMode = value);
                   }),
             )
@@ -131,21 +145,24 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-  Widget _language() => InkWell(
-        onTap: Navigation.language,
+  Widget _selectLanguage() => InkWell(
+        onTap: () => Navigation.language(then: (value) {
+          _setSetting(language: value);
+          setState(() => _language = value);
+        }),
         child: _setting(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: const [
-                Padding(
+              Row(children: [
+                const Padding(
                     padding: EdgeInsets.only(right: 20),
                     child: Icon(Icons.language)),
                 Text.rich(TextSpan(children: [
-                  TextSpan(text: "Language "),
+                  const TextSpan(text: "Language "),
                   TextSpan(
-                      text: "English US",
-                      style: TextStyle(fontWeight: FontWeight.w300))
+                      text: _language,
+                      style: const TextStyle(fontWeight: FontWeight.w300))
                 ]))
               ]),
               const Align(
@@ -168,17 +185,23 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(automaticallyImplyLeading: true),
-      body: FutureWidget<Map<String, dynamic>>(
-          future: () => Api.getSettings()..then(_getSettings, onError: (_) {}),
-          widget: ListView(children: [
-            section("Privacy"),
-            _switchAppearOnRadar(),
-            _switchTrackMyPosition(),
-            section("Notifications"),
-            _switchNotifications(),
-            section("Display"),
-            _language(),
-            _switchDarkMode(),
-            _logoutButton(),
-          ])));
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FutureWidget<Map<String, dynamic>>(
+              future: () =>
+                  Api.getSettings()..then(_getSettings, onError: (_) {}),
+              widget: ListView(shrinkWrap: true, children: [
+                section("Privacy"),
+                _switchAppearOnRadar(),
+                _switchTrackMyPosition(),
+                section("Notifications"),
+                _switchNotifications(),
+                section("Display"),
+                _selectLanguage(),
+                _switchDarkMode(),
+              ])),
+          _logoutButton(),
+        ],
+      ));
 }

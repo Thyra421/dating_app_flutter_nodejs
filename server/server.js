@@ -7,6 +7,7 @@ import { setHobbies, getHobbies } from './helpers/hobbies.js'
 import { getSettings, setSettings } from './helpers/settings.js'
 import { SERVER_PORT } from './config/port.js'
 import { getSteps, setSteps } from './helpers/steps.js'
+import { getIdentity, setIdentity } from './helpers/identity.js'
 
 const app = express()
 app.use(cors())
@@ -25,13 +26,13 @@ app.post('/login', login)
 app.post('/register', register)
 
 app.get('/hobbies', getHobbies)
-
 app.put('/hobbies', setHobbies)
 
 app.get('/settings', getSettings)
-
 app.put('/settings', setSettings)
 
 app.get('/steps', getSteps)
-
 app.put('/steps', setSteps)
+
+app.get('/identity', getIdentity)
+app.put('/identity', setIdentity)

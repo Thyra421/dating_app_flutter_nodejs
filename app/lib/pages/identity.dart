@@ -17,11 +17,22 @@ class _IdentityPageState extends State<IdentityPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
+  String? _gender;
 
   void _onClickNext() async {
     if (_formKey.currentState!.validate()) {
-      await Api.setSteps('identity', true);
-      Navigation.gettingStarted(replace: true);
+      try {
+        await Api.setIdentity(
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            gender: _gender,
+            dateOfBirth: _dateOfBirthController.text);
+        await Api.setSteps(identity: true);
+        Navigation.gettingStarted(replace: true);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
+      }
     }
   }
 
@@ -52,7 +63,10 @@ class _IdentityPageState extends State<IdentityPage> {
               "Other",
               "Prefere not to say"
             ],
-            callback: (String v) => s.didChange(v),
+            callback: (String v) {
+              _gender = v;
+              s.didChange(v);
+            },
             hint: "Gender",
             error: s.errorText,
           ));

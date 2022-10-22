@@ -13,36 +13,90 @@ class Navigation {
 
   static setNavigatorKey(GlobalKey<NavigatorState> key) => _navigatorKey = key;
 
-  static Future _push(Widget child, {Function? then, bool replace = false}) =>
+  static Future _push({
+    required Widget child,
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
       (replace
               ? _navigatorKey.currentState!.pushReplacement(
                   MaterialPageRoute(builder: (context) => child))
               : _navigatorKey.currentState!
                   .push(MaterialPageRoute(builder: (context) => child)))
           .then((value) {
-        if (then != null) then();
+        if (then != null) then(value);
       });
 
-  static void pop() => _navigatorKey.currentState!.pop();
+  static void pop<T extends Object?>([T? result]) =>
+      _navigatorKey.currentState!.pop(result);
 
-  static void home({Function? then, bool replace = false}) =>
-      _push(const Home(), replace: replace, then: then);
+  static void home({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const Home(),
+        replace: replace,
+        then: then,
+      );
 
-  static void login({Function? then, bool replace = false}) =>
-      _push(const LoginPage(), replace: replace, then: then);
+  static void login({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const LoginPage(),
+        replace: replace,
+        then: then,
+      );
 
-  static void register({Function? then, bool replace = false}) =>
-      _push(const RegisterPage(), replace: replace, then: then);
+  static void register({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const RegisterPage(),
+        replace: replace,
+        then: then,
+      );
 
-  static void settings({Function? then, bool replace = false}) =>
-      _push(const SettingsPage(), replace: replace, then: then);
+  static void settings({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const SettingsPage(),
+        replace: replace,
+        then: then,
+      );
 
-  static void language({Function? then, bool replace = false}) =>
-      _push(const LanguagePage(), replace: replace, then: then);
+  static void language({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const LanguagePage(),
+        replace: replace,
+        then: then,
+      );
 
-  static void identity({Function? then, bool replace = false}) =>
-      _push(const IdentityPage(), replace: replace, then: then);
+  static void identity({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const IdentityPage(),
+        replace: replace,
+        then: then,
+      );
 
-  static void gettingStarted({Function? then, bool replace = false}) =>
-      _push(const GettingStartedPage(), replace: replace, then: then);
+  static void gettingStarted({
+    void Function(dynamic value)? then,
+    bool replace = false,
+  }) =>
+      _push(
+        child: const GettingStartedPage(),
+        replace: replace,
+        then: then,
+      );
 }

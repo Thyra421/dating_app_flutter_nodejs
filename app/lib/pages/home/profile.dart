@@ -21,6 +21,8 @@ class _ProfilePageState extends State<ProfilePage>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late int _randomTipId;
 
+  String _firstName = "";
+  String _lastName = "";
   List<String> _itemsList = [];
 
   static const List<String> _ideas = [
@@ -67,6 +69,11 @@ class _ProfilePageState extends State<ProfilePage>
         _itemsList = itemsList;
       });
 
+  void _getName(Map<String, dynamic> identity) => setState(() {
+        _firstName = identity['firstName'];
+        _lastName = identity['lastName'];
+      });
+
   String? _onValidate(String? value) {
     value = formatItem(value ?? "");
     if (value.isEmpty) return "Please enter at least one character";
@@ -74,36 +81,28 @@ class _ProfilePageState extends State<ProfilePage>
     return null;
   }
 
-  Widget _name() => Container(
-        padding: const EdgeInsets.only(
-          left: 30,
-          top: 30,
-          bottom: 30,
-          right: 10,
-        ),
-        child: Row(
-          children: [
-            Container(
-                height: 70,
-                width: 70,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.white),
-                child: const Icon(Icons.person, color: Colors.black, size: 40)),
-            const Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text("Willem Rebergen",
-                    textAlign: TextAlign.end,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-              ),
+  Widget _name() => Row(
+        children: [
+          Container(
+              height: 70,
+              width: 70,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.white),
+              child: const Icon(Icons.person, color: Colors.black, size: 40)),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(text: "$_firstName "),
+                    TextSpan(text: _lastName)
+                  ]),
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24)),
             ),
-            IconButton(
-                iconSize: 30,
-                onPressed: () => Navigation.settings(),
-                icon: const Icon(Icons.settings))
-          ],
-        ),
+          ),
+        ],
       );
 
   Widget _youLike() => Container(
@@ -184,7 +183,21 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Column(children: [
-      _name(),
+      Padding(
+          padding:
+              const EdgeInsets.only(left: 30, top: 30, bottom: 30, right: 10),
+          child: Row(children: [
+            Expanded(
+              child: FutureWidget(
+                  future: () =>
+                      Api.getIdentity()..then(_getName, onError: (_) {}),
+                  widget: _name()),
+            ),
+            IconButton(
+                iconSize: 30,
+                onPressed: () => Navigation.settings(),
+                icon: const Icon(Icons.settings))
+          ])),
       _youLike(),
       FutureWidget(
           future: () => Api.getHobbies()..then(_getItemsList, onError: (_) {}),
