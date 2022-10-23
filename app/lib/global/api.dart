@@ -129,6 +129,7 @@ class Api {
     String? lastName,
     String? gender,
     String? dateOfBirth,
+    String? description,
   }) async =>
       _request(
           query: () => http.put(_url('identity'),
@@ -137,7 +138,8 @@ class Api {
                 if (firstName != null) 'firstName': firstName,
                 if (lastName != null) 'lastName': lastName,
                 if (gender != null) 'gender': gender,
-                if (dateOfBirth != null) 'dateOfBirth': dateOfBirth
+                if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
+                if (description != null) 'description': description
               })),
           onSuccess: (_) => {});
 }

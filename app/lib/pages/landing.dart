@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import 'package:app/global/api.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/global/storage.dart';
-import 'package:flutter/material.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});

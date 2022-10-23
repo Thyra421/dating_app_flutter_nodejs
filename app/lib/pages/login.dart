@@ -112,10 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontWeight: FontWeight.bold)))
       ]);
 
-  Widget _skip() => TextButton(
-      onPressed: () => Navigation.home(replace: true),
-      child: const Text("Skip", style: TextStyle(fontWeight: FontWeight.bold)));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +128,6 @@ class _LoginPageState extends State<LoginPage> {
               _googleButton(),
               _facebookButton(),
               _notAMember(),
-              _skip()
             ],
           ),
         ),

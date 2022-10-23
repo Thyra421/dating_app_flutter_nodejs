@@ -26,7 +26,7 @@ ThemeData darkTheme() => ThemeData(
     canvasColor: kBackgroundColor,
     hintColor: Colors.grey,
     textTheme: const TextTheme(
-        subtitle1: TextStyle(color: Colors.black)), // input field
+        subtitle1: TextStyle(color: Colors.white)), // input field
     elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
             shape: MaterialStateProperty.resolveWith((states) =>
@@ -57,9 +57,9 @@ ThemeData darkTheme() => ThemeData(
         behavior: SnackBarBehavior.floating,
         contentTextStyle: const TextStyle(color: Colors.red)),
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: Colors.grey.shade900,
       floatingLabelStyle: const TextStyle(color: kThemeColor),
       labelStyle: const TextStyle(color: Colors.grey),
       hintStyle: const TextStyle(color: Colors.grey),

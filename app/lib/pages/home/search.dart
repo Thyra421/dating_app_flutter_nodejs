@@ -11,7 +11,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   Widget _searchButton() => const Icon(Icons.search);
 
-  Duration _duration = Duration(minutes: 48, seconds: 13);
+  Duration _duration = const Duration(minutes: 48, seconds: 13);
 
   late Timer _timer;
 

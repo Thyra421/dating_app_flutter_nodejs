@@ -17,6 +17,7 @@ class _IdentityPageState extends State<IdentityPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
+
   String? _gender;
 
   void _onClickNext() async {

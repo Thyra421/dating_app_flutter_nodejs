@@ -66,7 +66,7 @@ class _DropdownListState extends State<DropdownList> {
               margin:
                   const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                   borderRadius: BorderRadius.circular(kBorderRadius)),
               child: ListView(
                   shrinkWrap: true,

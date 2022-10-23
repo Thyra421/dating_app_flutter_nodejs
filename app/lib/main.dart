@@ -7,7 +7,7 @@ import 'app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  Navigation.setNavigatorKey(_navigatorKey);
-  runApp(App(_navigatorKey));
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  Navigation.setNavigatorKey(navigatorKey);
+  runApp(App(navigatorKey));
 }

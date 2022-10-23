@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../global/format.dart';
 
-class ProfileItemCard extends StatefulWidget {
-  const ProfileItemCard({
+class ProfileItem extends StatefulWidget {
+  const ProfileItem({
     super.key,
     required this.item,
     required this.onRemoveItem,
@@ -17,20 +17,23 @@ class ProfileItemCard extends StatefulWidget {
   final List<String> itemsList;
 
   @override
-  State<ProfileItemCard> createState() => _ProfileItemCardState();
+  State<ProfileItem> createState() => _ProfileItemState();
 }
 
-class _ProfileItemCardState extends State<ProfileItemCard> {
+class _ProfileItemState extends State<ProfileItem> {
   late String _item;
   final TextEditingController _controller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isEditMode = false;
+  final FocusNode _focusNodeEdit = FocusNode();
 
   void _onEditValue() {
     if (!_formKey.currentState!.validate()) return;
     widget.onEditItem(_controller.text);
-    setState(() => _item = _controller.text);
-    _toggleEditMode();
+    setState(() {
+      _item = _controller.text;
+      _isEditMode = false;
+    });
   }
 
   String? _onValidate(String? value) {
@@ -41,7 +44,14 @@ class _ProfileItemCardState extends State<ProfileItemCard> {
     return null;
   }
 
-  void _toggleEditMode() => setState(() => _isEditMode = !_isEditMode);
+  void _onTap() {
+    setState(() => _isEditMode = true);
+    _focusNodeEdit.requestFocus();
+  }
+
+  void _focusListener() {
+    if (!_focusNodeEdit.hasPrimaryFocus) setState(() => _isEditMode = false);
+  }
 
   String _getInitials() {
     List<String> words = _item.split(' ');
@@ -66,31 +76,45 @@ class _ProfileItemCardState extends State<ProfileItemCard> {
       IconButton(icon: const Icon(Icons.check), onPressed: _onEditValue);
 
   Widget _itemName() =>
-      Padding(padding: const EdgeInsets.only(left: 10), child: Text(_item));
+      Padding(padding: const EdgeInsets.only(left: 20), child: Text(_item));
 
   Widget _editField() => Form(
       key: _formKey,
       child: TextFormField(
+        focusNode: _focusNodeEdit,
         controller: _controller,
         validator: _onValidate,
-        autofocus: true,
         decoration: InputDecoration(hintText: widget.item),
         maxLength: 30,
         textCapitalization: TextCapitalization.sentences,
       ));
 
   @override
+  void dispose() {
+    super.dispose();
+    _focusNodeEdit.removeListener(_focusListener);
+    _focusNodeEdit.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _item = widget.item;
     _controller.text = widget.item;
+    _focusNodeEdit.addListener(_focusListener);
   }
 
   @override
-  Widget build(BuildContext context) => ListTile(
-      onTap: _toggleEditMode,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      title: _isEditMode ? _editField() : _itemName(),
-      leading: _isEditMode ? null : _itemImage(),
-      trailing: _isEditMode ? _editButton() : _removeButton());
+  Widget build(BuildContext context) => InkWell(
+        onTap: _onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: kHorizontalPadding, vertical: 10),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            if (!_isEditMode) _itemImage(),
+            Expanded(child: _isEditMode ? _editField() : _itemName()),
+            _isEditMode ? _editButton() : _removeButton()
+          ]),
+        ),
+      );
 }

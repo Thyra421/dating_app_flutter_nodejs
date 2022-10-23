@@ -10,7 +10,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Widget> _pages = [const SearchPage(), const ProfilePage()];
+  final List<Widget> _pages = [
+    const SearchPage(),
+    const ProfilePage(),
+  ];
 
   Widget _navigationBar() => Container(
         decoration: BoxDecoration(
