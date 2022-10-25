@@ -11,8 +11,6 @@ export async function getSteps(req, res) {
     const query = { userId: id }
 
     const steps = await selectSteps(query)
-    if (steps == null)
-        return error(res, ErrorCodes.NOT_FOUND)
     return success(res, steps.steps)
 }
 

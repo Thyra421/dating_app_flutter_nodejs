@@ -142,4 +142,9 @@ class Api {
                 if (description != null) 'description': description
               })),
           onSuccess: (_) => {});
+
+  static Future<List<Map<String, dynamic>>> search() async => _request(
+      query: () => http.get(_url('search'), headers: _headers()),
+      onSuccess: (String body) =>
+          List<Map<String, dynamic>>.from(jsonDecode(body)));
 }

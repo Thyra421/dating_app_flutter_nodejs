@@ -8,6 +8,7 @@ import { getSettings, setSettings } from './helpers/settings.js'
 import { SERVER_PORT } from './config/port.js'
 import { getSteps, setSteps } from './helpers/steps.js'
 import { getIdentity, setIdentity } from './helpers/identity.js'
+import { search } from './helpers/search.js'
 
 const app = express()
 app.use(cors())
@@ -36,3 +37,5 @@ app.put('/steps', setSteps)
 
 app.get('/identity', getIdentity)
 app.put('/identity', setIdentity)
+
+app.get('/search', search)

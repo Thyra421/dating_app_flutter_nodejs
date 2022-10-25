@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app/global/api.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -9,11 +10,19 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  Widget _searchButton() => const Icon(Icons.search);
-
+  List<Map<String, dynamic>>? _matchesList;
   Duration _duration = const Duration(minutes: 48, seconds: 13);
-
   late Timer _timer;
+
+  void _onSearch() async {
+    try {
+      List<Map<String, dynamic>> matches = await Api.search();
+      setState(() => _matchesList = matches);
+    } catch (e) {}
+  }
+
+  Widget _searchButton() =>
+      IconButton(icon: const Icon(Icons.search), onPressed: () {});
 
   Widget _timeIndicator() => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,12 +36,15 @@ class _SearchPageState extends State<SearchPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(onPressed: () {}, child: const Text("Subscribe")),
+              TextButton(onPressed: _onSearch, child: const Text("Subscribe")),
               const Text("to get unlimited search.")
             ],
           ),
         ],
       );
+
+  Widget _matches() => ListView(
+      children: _matchesList!.map((e) => Text(e['firstName'])).toList());
 
   @override
   void dispose() {
@@ -50,9 +62,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-          child: Column(children: [
-        Expanded(child: Center(child: _searchButton())),
+  Widget build(BuildContext context) => Column(children: [
+        Expanded(
+            child: _matchesList == null
+                ? Center(child: _searchButton())
+                : _matches()),
         _timeIndicator()
-      ]));
+      ]);
 }

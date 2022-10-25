@@ -11,8 +11,6 @@ export async function getIdentity(req, res) {
     const query = { userId: id }
 
     const identity = await selectIdentity(query)
-    if (identity === null)
-        return error(res, ErrorCodes.NOT_FOUND)
     return success(res, identity.identity)
 }
 

@@ -11,8 +11,6 @@ export async function getSettings(req, res) {
     const query = { userId: id }
 
     const settings = await selectSettings(query)
-    if (settings === null)
-        return error(res, ErrorCodes.NOT_FOUND)
     return success(res, settings.settings)
 }
 
