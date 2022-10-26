@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:app/data/identity_data.dart';
+import 'package:app/data/match_data.dart';
+import 'package:app/data/settings_data.dart';
 import 'package:app/global/storage.dart';
 import 'package:http/http.dart' as http;
+
+import '../data/steps_data.dart';
 
 class Api {
   static const String _kEndpoint = 'http://localhost:8080';
@@ -69,9 +74,9 @@ class Api {
             writeStorage('token', body);
           });
 
-  static Future<Map<String, dynamic>> getSettings() async => _request(
+  static Future<SettingsData> getSettings() async => _request(
       query: () => http.get(_url('settings'), headers: _headers()),
-      onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
+      onSuccess: (String body) => SettingsData.fromJson(jsonDecode(body)));
 
   static Future<void> setSettings({
     bool? notifications,
@@ -101,9 +106,9 @@ class Api {
           headers: _headers(), body: jsonEncode(hobbies)),
       onSuccess: (_) => {});
 
-  static Future<Map<String, dynamic>> getSteps() async => _request(
+  static Future<StepsData> getSteps() async => _request(
       query: () => http.get(_url('steps'), headers: _headers()),
-      onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
+      onSuccess: (String body) => StepsData.fromJson(jsonDecode(body)));
 
   static Future<void> setSteps({
     bool? identity,
@@ -120,9 +125,9 @@ class Api {
               })),
           onSuccess: (_) => {});
 
-  static Future<Map<String, dynamic>> getIdentity() async => _request(
+  static Future<IdentityData> getIdentity() async => _request(
       query: () => http.get(_url('identity'), headers: _headers()),
-      onSuccess: (String body) => Map<String, dynamic>.from(jsonDecode(body)));
+      onSuccess: (String body) => IdentityData.fromJson(jsonDecode(body)));
 
   static Future<void> setIdentity({
     String? firstName,
@@ -143,8 +148,11 @@ class Api {
               })),
           onSuccess: (_) => {});
 
-  static Future<List<Map<String, dynamic>>> search() async => _request(
-      query: () => http.get(_url('search'), headers: _headers()),
+  static Future<List<MatchData>> search() async => _request(
+      query: () => http.get(_url('search?maxMatches=5&maxDistance=30'),
+          headers: _headers()),
       onSuccess: (String body) =>
-          List<Map<String, dynamic>>.from(jsonDecode(body)));
+          List<Map<String, dynamic>>.from(jsonDecode(body))
+              .map((e) => MatchData.fromJson(e))
+              .toList());
 }

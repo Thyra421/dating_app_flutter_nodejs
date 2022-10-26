@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app/data/steps_data.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/global/api.dart';
@@ -24,9 +25,9 @@ class _LandingPageState extends State<LandingPage> {
     String token = readStorage('token');
     Api.setToken(token);
     try {
-      Map<String, dynamic> steps = await Api.getSteps();
-      if (!steps['identity']) return Navigation.identity(replace: true);
-      if (!steps['gettingStarted'])
+      StepsData steps = await Api.getSteps();
+      if (!steps.identity) return Navigation.identity(replace: true);
+      if (!steps.gettingStarted)
         return Navigation.gettingStarted(replace: true);
       return Navigation.home(replace: true);
     } catch (e) {

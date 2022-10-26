@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app/data/match_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage>
     with AutomaticKeepAliveClientMixin {
-  List<Map<String, dynamic>>? _matchesList;
+  List<MatchData>? _matchesList;
   Duration _duration = const Duration(minutes: 48, seconds: 13);
   late Timer _timer;
   bool _loading = false;
@@ -20,7 +21,7 @@ class _SearchPageState extends State<SearchPage>
   void _onSearch() async {
     try {
       setState(() => _loading = true);
-      List<Map<String, dynamic>> matches = await Api.search();
+      List<MatchData> matches = await Api.search();
       setState(() {
         _matchesList = matches;
         _loading = false;
@@ -30,17 +31,9 @@ class _SearchPageState extends State<SearchPage>
     }
   }
 
-  Widget _match(
-    int index,
-    String firstName,
-    String lastName,
-    int matchesCount,
-    String description,
-  ) =>
-      Container(
-        margin: const EdgeInsets.symmetric(
-            horizontal: kHorizontalPadding, vertical: 10),
-        padding: const EdgeInsets.all(10),
+  Widget _match(MatchData data) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(kBorderRadius),
             color: Theme.of(context).inputDecorationTheme.fillColor),
@@ -61,16 +54,46 @@ class _SearchPageState extends State<SearchPage>
                       style: const TextStyle(
                           fontSize: 24, fontWeight: FontWeight.bold),
                       children: [
-                        TextSpan(text: "$firstName "),
-                        TextSpan(text: lastName)
+                        TextSpan(text: "${data.matchIdentity.firstName}, "),
+                        TextSpan(
+                            text:
+                                "${(data.matchIdentity.dateOfBirth.difference(DateTime.now()).inDays / 365).floor().abs()}")
                       ])),
-                  Text("You have $matchesCount hobbies in common!")
+                  Text.rich(TextSpan(children: [
+                    const TextSpan(text: "You have "),
+                    TextSpan(
+                        text: data.commonHobbiesCount.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const TextSpan(text: " hobbies in common")
+                  ]))
                 ]),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(description, textAlign: TextAlign.justify),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(data.matchIdentity.description,
+                    textAlign: TextAlign.justify)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.pin_drop)),
+                    Text.rich(TextSpan(children: [
+                      TextSpan(
+                          text: data.distance.toStringAsFixed(1),
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " km away")
+                    ]))
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.waving_hand_rounded),
+                  onPressed: () {},
+                )
+              ],
             )
           ],
         ),
@@ -100,17 +123,7 @@ class _SearchPageState extends State<SearchPage>
 
   Widget _matches() => ListView(
       padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
-      children: _matchesList!
-          .asMap()
-          .entries
-          .map((MapEntry<int, Map<String, dynamic>> entry) => _match(
-                entry.key,
-                entry.value['identity']['firstName'],
-                entry.value['identity']['lastName'],
-                entry.value['commonHobbiesCount'],
-                entry.value['identity']['description'],
-              ))
-          .toList());
+      children: _matchesList!.map((MatchData data) => _match(data)).toList());
 
   Widget _loadingIndicator() =>
       const Center(child: CircularProgressIndicator());

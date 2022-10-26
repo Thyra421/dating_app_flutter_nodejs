@@ -17,5 +17,7 @@ export const DEFAULT_IDENTITY = {
     lastName: "",
     dateOfBirth: "",
     gender: "",
-    description: ""
+    description: "",
+    posX: 0,
+    posY: 0
 }

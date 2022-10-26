@@ -1,3 +1,4 @@
+import 'package:app/data/settings_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/utils/future_widget.dart';
@@ -15,7 +16,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _appearOnRadar = false;
-  bool _trackMyPosition = false;
+  bool _trackPosition = false;
   bool _notifications = false;
   bool _darkMode = false;
   String _language = "";
@@ -41,12 +42,12 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void _getSettings(Map<String, dynamic> values) => setState(() {
-        _appearOnRadar = values['appearOnRadar'] ?? false;
-        _trackMyPosition = values['trackPosition'] ?? false;
-        _notifications = values['notifications'] ?? false;
-        _darkMode = values['darkMode'] ?? false;
-        _language = values['language'] ?? "";
+  void _getSettings(SettingsData data) => setState(() {
+        _appearOnRadar = data.appearOnRadar;
+        _trackPosition = data.trackPosition;
+        _notifications = data.notifications;
+        _darkMode = data.darkMode;
+        _language = data.language;
       });
 
   Widget _setting({required Widget child}) => Padding(
@@ -76,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-  Widget _switchTrackMyPosition() => _setting(
+  Widget _switchTrackPosition() => _setting(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -89,10 +90,10 @@ class _SettingsPageState extends State<SettingsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _trackMyPosition,
+                  value: _trackPosition,
                   onChanged: (bool value) {
                     _setSetting(trackPosition: value);
-                    setState(() => _trackMyPosition = value);
+                    setState(() => _trackPosition = value);
                   }),
             )
           ],
@@ -188,13 +189,13 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FutureWidget<Map<String, dynamic>>(
+          FutureWidget(
               future: () =>
                   Api.getSettings()..then(_getSettings, onError: (_) {}),
               widget: ListView(shrinkWrap: true, children: [
                 section("Privacy"),
                 _switchAppearOnRadar(),
-                _switchTrackMyPosition(),
+                _switchTrackPosition(),
                 section("Notifications"),
                 _switchNotifications(),
                 section("Display"),

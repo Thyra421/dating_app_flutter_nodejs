@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:app/components.dart/profile_description.dart';
 import 'package:app/components.dart/profile_item.dart';
+import 'package:app/data/identity_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
@@ -30,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage>
   static const List<String> _ideas = [
     "a movie",
     "a singer",
+    "a band",
     "a food",
     "a place",
     "a show",
@@ -71,10 +73,10 @@ class _ProfilePageState extends State<ProfilePage>
         _itemsList = itemsList;
       });
 
-  void _getIdentity(Map<String, dynamic> identity) => setState(() {
-        _firstName = identity['firstName'];
-        _lastName = identity['lastName'];
-        _description = identity['description'];
+  void _getIdentity(IdentityData data) => setState(() {
+        _firstName = data.firstName;
+        _lastName = data.lastName;
+        _description = data.description;
       });
 
   Expanded _name() => Expanded(

@@ -1,3 +1,4 @@
+import 'package:app/data/steps_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
@@ -23,9 +24,9 @@ class _LoginPageState extends State<LoginPage> {
       if (!_formKey.currentState!.validate()) return;
       await Api.login(
           mail: _mailController.text, password: _passwordController.text);
-      Map<String, dynamic> steps = await Api.getSteps();
-      if (!steps['identity']) return Navigation.identity(replace: true);
-      if (!steps['gettingStarted'])
+      StepsData steps = await Api.getSteps();
+      if (!steps.identity) return Navigation.identity(replace: true);
+      if (!steps.gettingStarted)
         return Navigation.gettingStarted(replace: true);
       return Navigation.home(replace: true);
     } catch (e) {

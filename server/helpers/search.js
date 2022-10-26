@@ -12,16 +12,8 @@ export async function search(req, res) {
 
     const query = { userId: id }
     const hobbies = await selectHobbies(query)
-    const matches = await searchCommonHobbies(hobbies.hobbies, id, req.params.max ?? 5)
-    const result = await Promise.all(matches.map(async match => {
-        const query = { userId: match.userId }
-        const identity = await selectIdentity(query)
-        return {
-            commonHobbiesCount: match.commonHobbiesCount,
-            commonHobbies: match.commonHobbies,
-            identity: identity.identity
-        }
-    }))
-
-    return success(res, result)
+    const identity = await selectIdentity(query)
+    const matches = await searchCommonHobbies(hobbies.hobbies, id, parseInt(req.query.maxMatches) ?? 5,
+        identity.identity.posX, identity.identity.posY, parseInt(req.query.maxDistance) ?? 3)
+    return success(res, matches)
 }
