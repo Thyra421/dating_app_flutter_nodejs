@@ -34,69 +34,41 @@ class Navigation {
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const Home(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const Home(), replace: replace, then: then);
 
   static void login({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const LoginPage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const LoginPage(), replace: replace, then: then);
 
   static void register({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const RegisterPage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const RegisterPage(), replace: replace, then: then);
 
   static void settings({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const SettingsPage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const SettingsPage(), replace: replace, then: then);
 
   static void language({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const LanguagePage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const LanguagePage(), replace: replace, then: then);
 
   static void identity({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const IdentityPage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const IdentityPage(), replace: replace, then: then);
 
   static void gettingStarted({
     void Function(dynamic value)? then,
     bool replace = false,
   }) =>
-      _push(
-        child: const GettingStartedPage(),
-        replace: replace,
-        then: then,
-      );
+      _push(child: const GettingStartedPage(), replace: replace, then: then);
 }

@@ -492,7 +492,6 @@ for i in range(0, 50):
     requests.request("PUT", endpoint + "hobbies", headers=headers, data=payload)
 
     # STEPS
-
     payload = json.dumps({
     "identity": True,
     "gettingStarted": True

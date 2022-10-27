@@ -1,5 +1,7 @@
+import 'package:app/data/error_data.dart';
 import 'package:app/data/settings_data.dart';
 import 'package:app/global/api.dart';
+import 'package:app/global/messenger.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/utils/future_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,40 +17,27 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _appearOnRadar = false;
-  bool _trackPosition = false;
-  bool _notifications = false;
-  bool _darkMode = false;
-  String _language = "";
+  SettingsData _settingsData = SettingsData();
 
   void _onLogout() {
     Api.logout();
     Navigation.login(replace: true);
   }
 
-  Future<void> _setSetting({
-    bool? notifications,
-    bool? appearOnRadar,
-    bool? trackPosition,
-    bool? darkMode,
-    String? language,
-  }) async {
-    return await Api.setSettings(
-      notifications: notifications,
-      appearOnRadar: appearOnRadar,
-      trackPosition: trackPosition,
-      darkMode: darkMode,
-      language: language,
-    );
+  void _setSetting(SettingsData settingsData) async {
+    SettingsData backup = SettingsData()..setFrom(_settingsData);
+
+    setState(() => _settingsData.setFrom(settingsData));
+    try {
+      await Api.setSettings(settingsData);
+    } catch (error) {
+      setState(() => _settingsData.setFrom(backup));
+      Messenger.showSnackBar("Failed changing setting");
+    }
   }
 
-  void _getSettings(SettingsData data) => setState(() {
-        _appearOnRadar = data.appearOnRadar;
-        _trackPosition = data.trackPosition;
-        _notifications = data.notifications;
-        _darkMode = data.darkMode;
-        _language = data.language;
-      });
+  void _getSettings(SettingsData settingsData) =>
+      setState(() => _settingsData = settingsData);
 
   Widget _setting({required Widget child}) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
@@ -67,11 +56,11 @@ class _SettingsPageState extends State<SettingsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _appearOnRadar,
-                  onChanged: (bool value) {
-                    setState(() => _appearOnRadar = value);
-                    _setSetting(appearOnRadar: value);
-                  }),
+                  value: _settingsData.appearOnRadar ?? false,
+                  onChanged: _settingsData.appearOnRadar == null
+                      ? null
+                      : (bool value) =>
+                          _setSetting(SettingsData(appearOnRadar: value))),
             )
           ],
         ),
@@ -90,11 +79,11 @@ class _SettingsPageState extends State<SettingsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _trackPosition,
-                  onChanged: (bool value) {
-                    _setSetting(trackPosition: value);
-                    setState(() => _trackPosition = value);
-                  }),
+                  value: _settingsData.trackPosition ?? false,
+                  onChanged: _settingsData.trackPosition == null
+                      ? null
+                      : (bool value) =>
+                          _setSetting(SettingsData(trackPosition: value))),
             )
           ],
         ),
@@ -113,11 +102,11 @@ class _SettingsPageState extends State<SettingsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _notifications,
-                  onChanged: (bool value) {
-                    _setSetting(notifications: value);
-                    setState(() => _notifications = value);
-                  }),
+                  value: _settingsData.notifications ?? false,
+                  onChanged: _settingsData.notifications == null
+                      ? null
+                      : (bool value) =>
+                          _setSetting(SettingsData(notifications: value))),
             )
           ],
         ),
@@ -136,21 +125,21 @@ class _SettingsPageState extends State<SettingsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _darkMode,
-                  onChanged: (bool value) {
-                    _setSetting(darkMode: value);
-                    setState(() => _darkMode = value);
-                  }),
+                  value: _settingsData.darkMode ?? false,
+                  onChanged: _settingsData.darkMode == null
+                      ? null
+                      : (bool value) =>
+                          _setSetting(SettingsData(darkMode: value))),
             )
           ],
         ),
       );
 
   Widget _selectLanguage() => InkWell(
-        onTap: () => Navigation.language(then: (value) {
-          _setSetting(language: value);
-          setState(() => _language = value);
-        }),
+        onTap: () => _settingsData.language == null
+            ? null
+            : Navigation.language(
+                then: (value) => _setSetting(SettingsData(language: value))),
         child: _setting(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Text.rich(TextSpan(children: [
                   const TextSpan(text: "Language "),
                   TextSpan(
-                      text: _language,
+                      text: _settingsData.language ?? "",
                       style: const TextStyle(fontWeight: FontWeight.w300))
                 ]))
               ]),

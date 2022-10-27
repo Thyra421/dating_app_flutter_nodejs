@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:app/data/error_data.dart';
 import 'package:app/data/identity_data.dart';
 import 'package:app/data/match_data.dart';
 import 'package:app/data/settings_data.dart';
@@ -30,13 +31,13 @@ class Api {
     try {
       final http.Response response = await query().timeout(_kTimeoutDuration);
       if (response.statusCode == 200) return onSuccess(response.body);
-      return Future.error(jsonDecode(response.body));
+      return Future.error(ErrorData.fromJson(jsonDecode(response.body)));
     } on TimeoutException catch (_) {
-      return Future.error({"value": "Request timeout", "code": 504});
+      return Future.error(ErrorData(value: "Request timeout", code: 504));
     } on SocketException catch (_) {
-      return Future.error({"value": "Server unreachable", "code": 503});
+      return Future.error(ErrorData(value: "Server unreachable", code: 503));
     } catch (_) {
-      return Future.error({"value": "Uncategorized error", "code": 400});
+      return Future.error(ErrorData(value: "Uncategorized error", code: 400));
     }
   }
 
@@ -78,24 +79,10 @@ class Api {
       query: () => http.get(_url('settings'), headers: _headers()),
       onSuccess: (String body) => SettingsData.fromJson(jsonDecode(body)));
 
-  static Future<void> setSettings({
-    bool? notifications,
-    bool? appearOnRadar,
-    bool? trackPosition,
-    bool? darkMode,
-    String? language,
-  }) async =>
-      _request(
-          query: () => http.put(_url('settings'),
-              headers: _headers(),
-              body: jsonEncode({
-                if (notifications != null) "notifications": notifications,
-                if (appearOnRadar != null) "appearOnRadar": appearOnRadar,
-                if (trackPosition != null) "trackPosition": trackPosition,
-                if (darkMode != null) "darkMode": darkMode,
-                if (language != null) "language": language,
-              })),
-          onSuccess: (_) => {});
+  static Future<void> setSettings(SettingsData settingsData) async => _request(
+      query: () => http.put(_url('settings'),
+          headers: _headers(), body: jsonEncode(settingsData)),
+      onSuccess: (_) => {});
 
   static Future<List<String>> getHobbies() async => _request(
       query: () => http.get(_url('hobbies'), headers: _headers()),
