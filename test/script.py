@@ -514,9 +514,3 @@ for i in range(100):
     'posY': posy
     })
     requests.request("PUT", endpoint + "location", headers=headers, data=payload)
-
-    # SETTINGS
-    payload = json.dumps({
-    "maxDistance": 20
-    })
-    requests.request("PUT", endpoint + "settings", headers=headers, data=payload)

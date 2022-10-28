@@ -5,6 +5,7 @@ import { error, success } from "../utils/responses.js"
 import { selectHobbies } from "../models/hobbies.js"
 import { selectLocation } from "../models/location.js"
 import { selectSettings } from "../models/settings.js"
+import { DISTANCES } from '../config/distances.js'
 
 export async function search(req, res) {
     const id = await checkAuthorization(req.headers)
@@ -16,6 +17,7 @@ export async function search(req, res) {
     const location = await selectLocation(query)
     const settings = await selectSettings(query)
     const matches = await searchCommonHobbies(id, hobbies.hobbies,
-        location.location.posX, location.location.posY, settings.settings.maxDistance)
+        location.location.posX, location.location.posY,
+        DISTANCES[settings.settings.maxDistance])
     return success(res, matches)
 }

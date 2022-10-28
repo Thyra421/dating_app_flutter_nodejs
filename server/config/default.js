@@ -4,7 +4,7 @@ export const DEFAULT_SETTINGS = {
     trackPosition: true,
     language: "English US",
     darkMode: true,
-    maxDistance: 5
+    maxDistance: 2
 }
 
 export const DEFAULT_STEPS = {

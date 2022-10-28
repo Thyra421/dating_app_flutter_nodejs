@@ -142,12 +142,13 @@ class _SearchPageState extends State<SearchPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Column(children: [
+      _searchButton(),
       Expanded(
           child: _loading
               ? _loadingIndicator()
-              : _matchesList == null
-                  ? _searchButton()
-                  : _matches()),
+              : _matchesList != null
+                  ? _matches()
+                  : Container()),
       // _timeIndicator()
     ]);
   }

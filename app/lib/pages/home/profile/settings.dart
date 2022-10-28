@@ -1,4 +1,3 @@
-import 'package:app/data/error_data.dart';
 import 'package:app/data/settings_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/messenger.dart';
@@ -18,6 +17,11 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   SettingsData _settingsData = SettingsData();
+
+  void _onMoveSlider(double value) =>
+      setState(() => _settingsData.maxDistance = value.toInt());
+
+  static const List<String> _distances = ["100m", "1km", "5km", "10km", "30km"];
 
   void _onLogout() {
     Api.logout();
@@ -57,7 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
               alignment: Alignment.centerRight,
               child: Switch(
                   value: _settingsData.appearOnRadar ?? false,
-                  onChanged: _settingsData.appearOnRadar == null
+                  onChanged: _settingsData.appearOnRadar == null ||
+                          (_settingsData.trackPosition != null &&
+                              !_settingsData.trackPosition!)
                       ? null
                       : (bool value) =>
                           _setSetting(SettingsData(appearOnRadar: value))),
@@ -82,8 +88,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: _settingsData.trackPosition ?? false,
                   onChanged: _settingsData.trackPosition == null
                       ? null
-                      : (bool value) =>
-                          _setSetting(SettingsData(trackPosition: value))),
+                      : (bool value) {
+                          if (!value)
+                            _setSetting(SettingsData(
+                                trackPosition: value, appearOnRadar: false));
+                          else
+                            _setSetting(SettingsData(trackPosition: value));
+                        }),
             )
           ],
         ),
@@ -163,14 +174,35 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
+  Widget _distanceSlider() => _setting(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        if (_settingsData.maxDistance != null)
+          SizedBox(
+              width: 50,
+              child: Text(_distances[_settingsData.maxDistance!.toInt()],
+                  style: const TextStyle(fontWeight: FontWeight.bold))),
+        Expanded(
+            child: Slider(
+                onChangeEnd: (value) =>
+                    _setSetting(SettingsData(maxDistance: value.toInt())),
+                value: _settingsData.maxDistance != null
+                    ? _settingsData.maxDistance!.toDouble()
+                    : 0,
+                onChanged:
+                    _settingsData.maxDistance != null ? _onMoveSlider : null,
+                min: 0,
+                max: _distances.length - 1,
+                divisions: _distances.length - 1)),
+      ]));
+
   Widget _logoutButton() => Center(
-        child: TextButton(
-            style: ButtonStyle(
-                textStyle: MaterialStateProperty.all(const TextStyle(
-                    color: Colors.red, fontWeight: FontWeight.bold))),
-            onPressed: _onLogout,
-            child: const Text("Sign out")),
-      );
+      child: TextButton(
+          style: ButtonStyle(
+              textStyle: MaterialStateProperty.all(const TextStyle(
+                  color: Colors.red, fontWeight: FontWeight.bold))),
+          onPressed: _onLogout,
+          child: const Text("Sign out")));
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -183,8 +215,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   Api.getSettings()..then(_getSettings, onError: (_) {}),
               widget: ListView(shrinkWrap: true, children: [
                 section("Privacy"),
-                _switchAppearOnRadar(),
                 _switchTrackPosition(),
+                _switchAppearOnRadar(),
+                section("Search distance"),
+                _distanceSlider(),
                 section("Notifications"),
                 _switchNotifications(),
                 section("Display"),

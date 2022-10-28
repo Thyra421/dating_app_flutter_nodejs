@@ -45,10 +45,8 @@ class _ProfilePageState extends State<ProfilePage>
     "a music instrument"
   ];
 
-  void _scrollToBottom() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
-  }
+  void _scrollToBottom() =>
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
 
   void _onOtherTip() => _randomTipId = Random().nextInt(_ideas.length);
 
@@ -73,7 +71,6 @@ class _ProfilePageState extends State<ProfilePage>
 
     try {
       await Api.setHobbies(_itemsList);
-      _scrollToBottom();
     } catch (e) {
       setState(() => _itemsList = backup);
       Messenger.showSnackBar("Failed removing item");
@@ -90,7 +87,6 @@ class _ProfilePageState extends State<ProfilePage>
 
     try {
       await Api.setHobbies(_itemsList);
-      _scrollToBottom();
     } catch (e) {
       setState(() => _itemsList = backup);
       Messenger.showSnackBar("Failed editing item");
@@ -210,15 +206,28 @@ class _ProfilePageState extends State<ProfilePage>
       FutureWidget(
           future: () => Api.getHobbies()..then(_getItemsList, onError: (_) {}),
           widget: Expanded(
-              child: ListView(
-            padding: const EdgeInsets.only(bottom: 30),
-            controller: _scrollController,
-            children: [
-              _items(),
-              AddProfileItem(onAddItem: _onAddItem, itemsList: _itemsList),
-              _noMoreIdea(),
-            ],
-          )))
+              child: Stack(children: [
+            ListView(
+                padding: const EdgeInsets.only(bottom: 30),
+                controller: _scrollController,
+                children: [
+                  _items(),
+                  AddProfileItem(onAddItem: _onAddItem, itemsList: _itemsList),
+                  _noMoreIdea(),
+                ]),
+            // if (_scrollController.hasClients &&
+            //     _scrollController.position.pixels <
+            //         _scrollController.position.maxScrollExtent)
+            //   Align(
+            //       alignment: Alignment.bottomRight,
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(20),
+            //         child: FloatingActionButton(
+            //             mini: true,
+            //             onPressed: _scrollToBottom,
+            //             child: const Icon(Icons.arrow_downward)),
+            //       ))
+          ])))
     ]);
   }
 }
