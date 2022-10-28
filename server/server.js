@@ -1,13 +1,16 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+
+import { SERVER_PORT } from './config/port.js'
+
 import { login } from './helpers/login.js'
 import { register } from './helpers/register.js'
 import { setHobbies, getHobbies } from './helpers/hobbies.js'
 import { getSettings, setSettings } from './helpers/settings.js'
-import { SERVER_PORT } from './config/port.js'
 import { getSteps, setSteps } from './helpers/steps.js'
 import { getIdentity, setIdentity } from './helpers/identity.js'
+import { getLocation, setLocation } from './helpers/location.js'
 import { search } from './helpers/search.js'
 
 const app = express()
@@ -18,7 +21,7 @@ app.listen(SERVER_PORT, () => {
     console.log(`Server listening at http://localhost:${SERVER_PORT}`)
 })
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     return res.send("Server online")
 })
 
@@ -37,5 +40,8 @@ app.put('/steps', setSteps)
 
 app.get('/identity', getIdentity)
 app.put('/identity', setIdentity)
+
+app.get('/location', getLocation)
+app.put('/location', setLocation)
 
 app.get('/search', search)

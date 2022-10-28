@@ -1,37 +1,52 @@
-import { hobbies, identity } from "./database.js"
+import { location } from "./database.js"
 
-export async function searchCommonHobbies(userHobbies, userId, maxMatches, xA, yA, maxDistance) {
+export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistance) {
     const isInRange = `function (xB, yB) {
         return Math.sqrt(Math.pow(${xA} - xB, 2) + Math.pow(${yA} - yB, 2)) <= ${maxDistance}
     }`
 
-    const identityPipeline = [{
-        $match: {
-            $and: [
-                { userId: { $ne: userId } },
-                {
-                    $expr: {
-                        $function: {
-                            body: isInRange,
-                            args: ["$identity.posX", "$identity.posY"],
-                            lang: "js"
+    const distance = `function (xB, yB) {
+        return Math.sqrt(Math.pow(${xA} - xB, 2) + Math.pow(${yA} - yB, 2))
+    }`
+
+    const pipeline = [
+        {
+            $match: {
+                $and: [
+                    { userId: { $ne: userId } },
+                    {
+                        $expr: {
+                            $function: {
+                                body: isInRange,
+                                args: ["$location.posX", "$location.posY"],
+                                lang: "js"
+                            }
                         }
                     }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "hobbies",
+                localField: "userId",
+                foreignField: "userId",
+                as: "tmp"
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects:
+                        [{ $arrayElemAt: ["$tmp", 0] }, "$$ROOT"]
                 }
-            ]
-        }
-    }]
-
-    const identityMatches = await (identity.aggregate(identityPipeline)).toArray()
-
-    const userIdMatches = identityMatches.map(i => i.userId);
-
-    const hobbiesPipeline = [
-        { $match: { $expr: { $in: ["$userId", userIdMatches] } } },
+            }
+        },
         {
             $project: {
-                _id: 0,
                 userId: 1,
+                identity: 1,
+                location: 1,
                 commonHobbies: {
                     $setIntersection: [
                         "$hobbies",
@@ -43,24 +58,52 @@ export async function searchCommonHobbies(userHobbies, userId, maxMatches, xA, y
         {
             $project: {
                 userId: 1,
-                distance: 1,
+                identity: 1,
+                location: 1,
                 commonHobbiesCount: { $size: "$commonHobbies" }
             }
         },
-        { $sort: { commonHobbiesCount: -1 } },
-        { $limit: maxMatches }
+        {
+            $sort: { commonHobbiesCount: -1 }
+        },
+        {
+            $limit: 5
+        },
+        {
+            $lookup: {
+                from: "identity",
+                localField: "userId",
+                foreignField: "userId",
+                as: "tmp"
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects:
+                        [{ $arrayElemAt: ["$tmp", 0] }, "$$ROOT"]
+                }
+            }
+        },
+        {
+            $project: {
+                identity: 1,
+                commonHobbiesCount: 1,
+                distance: {
+                    $function: {
+                        body: distance,
+                        args: ["$location.posX", "$location.posY"],
+                        lang: "js"
+                    }
+                }
+            }
+        },
+        {
+            $project: { _id: 0 }
+        }
     ]
 
-    const hobbiesMatches = await (hobbies.aggregate(hobbiesPipeline)).toArray()
-
-    const matches = hobbiesMatches.map(hobbyMatch => {
-        const identityMatch = identityMatches.find(im => im.userId === hobbyMatch.userId)
-        const distance = Math.sqrt(Math.pow(xA - identityMatch.identity.posX, 2)
-            + Math.pow(yA - identityMatch.identity.posY, 2))
-        const commonHobbiesCount = hobbyMatch.commonHobbiesCount
-        const matchIdentity = identityMatch.identity
-        return { commonHobbiesCount, matchIdentity, distance }
-    })
+    const matches = await (location.aggregate(pipeline)).toArray()
 
     return matches
 }

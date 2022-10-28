@@ -1,3 +1,5 @@
+import 'package:app/data/error_data.dart';
+import 'package:app/global/messenger.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +29,9 @@ class _RegisterPageState extends State<RegisterPage> {
       await Api.register(
           mail: _mailController.text, password: _passwordController.text);
       Navigation.identity(replace: true);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
-    }
+    } on ErrorData catch (e) {
+      Messenger.showSnackBar(e.value!);
+    } catch (e) {}
   }
 
   void _toggleObscurePasswordText() =>

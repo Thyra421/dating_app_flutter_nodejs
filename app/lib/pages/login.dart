@@ -4,7 +4,9 @@ import 'package:app/global/navigation.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../data/error_data.dart';
 import '../global/format.dart';
+import '../global/messenger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,19 +22,18 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   void _onSubmit() async {
+    if (!_formKey.currentState!.validate()) return;
     try {
-      if (!_formKey.currentState!.validate()) return;
       await Api.login(
           mail: _mailController.text, password: _passwordController.text);
       StepsData steps = await Api.getSteps();
-      if (!steps.identity) return Navigation.identity(replace: true);
-      if (!steps.gettingStarted)
+      if (!steps.identity!) return Navigation.identity(replace: true);
+      if (!steps.gettingStarted!)
         return Navigation.gettingStarted(replace: true);
       return Navigation.home(replace: true);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text((e as Map<String, dynamic>)['value'])));
-    }
+    } on ErrorData catch (e) {
+      Messenger.showSnackBar(e.value!);
+    } catch (e) {}
   }
 
   void _toggleObscureText() => setState(() => _obscureText = !_obscureText);

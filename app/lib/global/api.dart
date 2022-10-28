@@ -53,10 +53,7 @@ class Api {
       _request(
           query: () => http.post(_url('login'),
               headers: _headers(authorization: false),
-              body: jsonEncode({
-                "mail": mail,
-                'password': password,
-              })),
+              body: jsonEncode({"mail": mail, 'password': password})),
           onSuccess: (String body) {
             setToken(body);
             writeStorage('token', body);
@@ -97,47 +94,22 @@ class Api {
       query: () => http.get(_url('steps'), headers: _headers()),
       onSuccess: (String body) => StepsData.fromJson(jsonDecode(body)));
 
-  static Future<void> setSteps({
-    bool? identity,
-    bool? gettingStarted,
-    bool? confirmMail,
-  }) async =>
-      _request(
-          query: () => http.put(_url('steps'),
-              headers: _headers(),
-              body: jsonEncode({
-                if (identity != null) "identity": identity,
-                if (gettingStarted != null) "gettingStarted": gettingStarted,
-                if (confirmMail != null) "confirmMail": confirmMail,
-              })),
-          onSuccess: (_) => {});
+  static Future<void> setSteps(StepsData stepsData) async => _request(
+      query: () => http.put(_url('steps'),
+          headers: _headers(), body: jsonEncode(stepsData)),
+      onSuccess: (_) => {});
 
   static Future<IdentityData> getIdentity() async => _request(
       query: () => http.get(_url('identity'), headers: _headers()),
       onSuccess: (String body) => IdentityData.fromJson(jsonDecode(body)));
 
-  static Future<void> setIdentity({
-    String? firstName,
-    String? lastName,
-    String? gender,
-    String? dateOfBirth,
-    String? description,
-  }) async =>
-      _request(
-          query: () => http.put(_url('identity'),
-              headers: _headers(),
-              body: jsonEncode({
-                if (firstName != null) 'firstName': firstName,
-                if (lastName != null) 'lastName': lastName,
-                if (gender != null) 'gender': gender,
-                if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
-                if (description != null) 'description': description
-              })),
-          onSuccess: (_) => {});
+  static Future<void> setIdentity(IdentityData identityData) async => _request(
+      query: () => http.put(_url('identity'),
+          headers: _headers(), body: jsonEncode(identityData)),
+      onSuccess: (_) => {});
 
   static Future<List<MatchData>> search() async => _request(
-      query: () => http.get(_url('search?maxMatches=5&maxDistance=30'),
-          headers: _headers()),
+      query: () => http.get(_url('search'), headers: _headers()),
       onSuccess: (String body) =>
           List<Map<String, dynamic>>.from(jsonDecode(body))
               .map((e) => MatchData.fromJson(e))

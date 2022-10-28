@@ -1,12 +1,12 @@
 class StepsData {
-  bool identity;
-  bool gettingStarted;
-  bool confirmMail;
+  bool? identity;
+  bool? gettingStarted;
+  bool? confirmMail;
 
   StepsData({
-    required this.identity,
-    required this.gettingStarted,
-    required this.confirmMail,
+    this.identity,
+    this.gettingStarted,
+    this.confirmMail,
   });
 
   factory StepsData.fromJson(Map<String, dynamic> json) => StepsData(
@@ -16,8 +16,8 @@ class StepsData {
       );
 
   Map<String, dynamic> toJson() => {
-        'identity': identity,
-        'gettingStarted': gettingStarted,
-        'confirmMail': confirmMail,
+        if (identity != null) 'identity': identity!,
+        if (gettingStarted != null) 'gettingStarted': gettingStarted!,
+        if (confirmMail != null) 'confirmMail': confirmMail!,
       };
 }

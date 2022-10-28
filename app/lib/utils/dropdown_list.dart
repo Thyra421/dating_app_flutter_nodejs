@@ -2,7 +2,14 @@ import 'package:app/global/format.dart';
 import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
 
-class DropdownList extends StatefulWidget {
+class DropdownEntry<T> {
+  final String key;
+  final T value;
+
+  DropdownEntry(this.key, this.value);
+}
+
+class DropdownList<T> extends StatefulWidget {
   const DropdownList({
     super.key,
     required this.choices,
@@ -13,24 +20,24 @@ class DropdownList extends StatefulWidget {
     this.error,
   });
 
-  final List<String> choices;
+  final List<DropdownEntry<T>> choices;
   final String? hint;
   final bool isMultiple;
-  final String? initialValue;
-  final void Function(String value) callback;
+  final DropdownEntry<T>? initialValue;
+  final void Function(DropdownEntry<T> value) callback;
   final String? error;
 
   @override
-  State<DropdownList> createState() => _DropdownListState();
+  State<DropdownList<T>> createState() => _DropdownListState<T>();
 }
 
-class _DropdownListState extends State<DropdownList> {
-  String? _selectedValue;
+class _DropdownListState<T> extends State<DropdownList<T>> {
+  DropdownEntry<T>? _selectedValue;
   bool _isExpanded = false;
 
   void _toggleExpanded() => setState(() => _isExpanded = !_isExpanded);
 
-  void _setValue(String value) => setState(() {
+  void _setValue(DropdownEntry<T> value) => setState(() {
         _selectedValue = value;
         widget.callback(value);
         _isExpanded = !_isExpanded;
@@ -47,15 +54,16 @@ class _DropdownListState extends State<DropdownList> {
                   suffixIcon: const Icon(Icons.keyboard_arrow_down,
                       color: Colors.black)),
               child: _selectedValue != null
-                  ? Text(_selectedValue!,
+                  ? Text(_selectedValue!.key,
                       style: Theme.of(context).textTheme.subtitle1)
                   : null)));
 
-  Widget _choice(String choice) => InkWell(
+  Widget _choice(DropdownEntry<T> choice) => InkWell(
       onTap: () => _setValue(choice),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Text(choice, style: Theme.of(context).textTheme.subtitle1)));
+          child:
+              Text(choice.key, style: Theme.of(context).textTheme.subtitle1)));
 
   Widget _choices() => AnimatedSize(
       duration: const Duration(milliseconds: 100),
@@ -70,7 +78,9 @@ class _DropdownListState extends State<DropdownList> {
                   borderRadius: BorderRadius.circular(kBorderRadius)),
               child: ListView(
                   shrinkWrap: true,
-                  children: widget.choices.map((c) => _choice(c)).toList()))
+                  children: widget.choices
+                      .map((DropdownEntry<T> c) => _choice(c))
+                      .toList()))
           : Container());
 
   @override

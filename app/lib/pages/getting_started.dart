@@ -1,3 +1,4 @@
+import 'package:app/data/steps_data.dart';
 import 'package:app/global/api.dart';
 import 'package:app/global/format.dart';
 import 'package:app/global/navigation.dart';
@@ -12,13 +13,13 @@ class GettingStartedPage extends StatefulWidget {
 }
 
 class _GettingStartedPageState extends State<GettingStartedPage> {
-  void _onClickDone() async {
-    await Api.setSteps(gettingStarted: true);
+  void _onClickDone() {
+    Api.setSteps(StepsData(gettingStarted: true));
     Navigation.home(replace: true);
   }
 
-  void _onClickSkip() async {
-    await Api.setSteps(gettingStarted: true);
+  void _onClickSkip() {
+    Api.setSteps(StepsData(gettingStarted: true));
     Navigation.home(replace: true);
   }
 
@@ -37,70 +38,70 @@ class _GettingStartedPageState extends State<GettingStartedPage> {
       child: Text(item, textAlign: TextAlign.center));
 
   Widget _itemsGrid(List<String> items) => Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 100),
-            child: GridView.count(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                shrinkWrap: true,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                scrollDirection: Axis.horizontal,
-                crossAxisCount: 1,
-                children: items.map((item) => _itemCard(item)).toList())),
-      );
+      padding: const EdgeInsets.only(bottom: 20),
+      child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 100),
+          child: GridView.count(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
+              shrinkWrap: true,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              scrollDirection: Axis.horizontal,
+              crossAxisCount: 1,
+              children: items.map((item) => _itemCard(item)).toList())));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(automaticallyImplyLeading: false, actions: [_skipButton()]),
-      body: ListView(children: [
-        title("Getting started"),
-        section("Select items you like"),
-        subtitle("You can always change your choices later"),
-        section("Movie genre"),
-        _itemsGrid([
-          "Action",
-          "Thriller",
-          "Comedy",
-          "Drama",
-          "Romance",
-          "Adventure",
-          "Horror",
-          "Science Fiction",
-          "Adventure",
-        ]),
-        section("Music genre"),
-        _itemsGrid([
-          "Rap",
-          "Pop",
-          "Rock",
-          "Reggae",
-          "Metal",
-          "Electronic",
-          "R&B",
-          "Hardcore",
-          "Jazz",
-          "Latin",
-          "Country",
-          "Folk",
-        ]),
-        section("Activity"),
-        _itemsGrid([
-          "Sport",
-          "Reading",
-          "Shopping",
-          "Video Games",
-          "Travel",
-          "Dance",
-          "Cooking",
-          "Board games",
-          "DIY",
-        ]),
-        _doneButton()
-      ]),
-    );
+        appBar:
+            AppBar(automaticallyImplyLeading: false, actions: [_skipButton()]),
+        body: ListView(children: [
+          title("Getting started"),
+          section("Select items you like"),
+          subtitle("You can always change your choices later"),
+          section("Movie genre"),
+          _itemsGrid([
+            "Action",
+            "Thriller",
+            "Comedy",
+            "Drama",
+            "Romance",
+            "Adventure",
+            "Horror",
+            "Science Fiction",
+            "Adventure",
+          ]),
+          section("Music genre"),
+          _itemsGrid([
+            "Rap",
+            "Pop",
+            "Rock",
+            "Reggae",
+            "Metal",
+            "Electronic",
+            "Latin",
+            "Classic",
+            "R&B",
+            "Hardcore",
+            "Jazz",
+            "Blues",
+            "Country",
+            "Folk",
+          ]),
+          section("Activity"),
+          _itemsGrid([
+            "Sport",
+            "Reading",
+            "Shopping",
+            "Video Games",
+            "Travel",
+            "Dance",
+            "Cooking",
+            "Board games",
+            "DIY",
+          ]),
+          _doneButton()
+        ]));
   }
 }

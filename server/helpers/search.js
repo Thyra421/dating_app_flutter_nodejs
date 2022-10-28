@@ -3,7 +3,8 @@ import { ErrorCodes } from "../config/error_codes.js"
 import { checkAuthorization } from "../utils/header.js"
 import { error, success } from "../utils/responses.js"
 import { selectHobbies } from "../models/hobbies.js"
-import { selectIdentity } from "../models/identity.js"
+import { selectLocation } from "../models/location.js"
+import { selectSettings } from "../models/settings.js"
 
 export async function search(req, res) {
     const id = await checkAuthorization(req.headers)
@@ -12,8 +13,9 @@ export async function search(req, res) {
 
     const query = { userId: id }
     const hobbies = await selectHobbies(query)
-    const identity = await selectIdentity(query)
-    const matches = await searchCommonHobbies(hobbies.hobbies, id, parseInt(req.query.maxMatches) ?? 5,
-        identity.identity.posX, identity.identity.posY, parseInt(req.query.maxDistance) ?? 3)
+    const location = await selectLocation(query)
+    const settings = await selectSettings(query)
+    const matches = await searchCommonHobbies(id, hobbies.hobbies,
+        location.location.posX, location.location.posY, settings.settings.maxDistance)
     return success(res, matches)
 }

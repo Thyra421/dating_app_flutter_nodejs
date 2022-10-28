@@ -26,8 +26,8 @@ class _LandingPageState extends State<LandingPage> {
     Api.setToken(token);
     try {
       StepsData steps = await Api.getSteps();
-      if (!steps.identity) return Navigation.identity(replace: true);
-      if (!steps.gettingStarted)
+      if (!steps.identity!) return Navigation.identity(replace: true);
+      if (!steps.gettingStarted!)
         return Navigation.gettingStarted(replace: true);
       return Navigation.home(replace: true);
     } catch (e) {

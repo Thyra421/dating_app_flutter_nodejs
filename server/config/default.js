@@ -3,7 +3,8 @@ export const DEFAULT_SETTINGS = {
     appearOnRadar: true,
     trackPosition: true,
     language: "English US",
-    darkMode: true
+    darkMode: true,
+    maxDistance: 5
 }
 
 export const DEFAULT_STEPS = {
@@ -14,10 +15,12 @@ export const DEFAULT_STEPS = {
 
 export const DEFAULT_IDENTITY = {
     firstName: "",
-    lastName: "",
-    dateOfBirth: "",
+    dateOfBirth: "1970-01-01",
     gender: "",
-    description: "",
+    description: ""
+}
+
+export const DEFAULT_LOCATION = {
     posX: 0,
     posY: 0
 }

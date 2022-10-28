@@ -1,8 +1,15 @@
+## SCRIPT TO POPULATE THE DATABASE WITH RANDOMLY GENERATED USERS ##
+
+import os
 import requests
 import json
 from random import randrange
 
 endpoint = "http://127.0.0.1:8080/"
+# minlat = -90000
+# maxlat = 90000
+# minlong = -180000
+# maxlong = 180000
 
 names =["Liam",
 "Noah",
@@ -442,7 +449,10 @@ descriptions = ["A strong positive mental attitude will create more miracles tha
 "The only person you are destined to become is the person you decide to be. -Ralph Waldo Emerson"
 ]
 
-for i in range(0, 50):    
+for i in range(100):
+    os.system('clear')
+    print(i+1)
+
     # REGISTER
     name1 = names[randrange(len(names))]
     separator = separators[randrange(len(separators))]
@@ -459,25 +469,22 @@ for i in range(0, 50):
     }
     response = requests.request("POST", endpoint + "register", headers=headers, data=payload)   
 
+    headers = {
+    'Content-Type': 'application/json',
+    "Authorization":response.text
+    }
+
     # IDENTITY
     day = str(randrange(1,29)).zfill(2)
     month = str(randrange(1,13)).zfill(2)
     year = str(randrange(1950, 2010))
     desc = descriptions[randrange(len(descriptions))]
-    posx = randrange(-50, 50)
-    posy = randrange(-50, 50)
+
     payload = json.dumps({
-    "firstName": name1,
-    "lastName": name2,
+    "firstName": name1,    
     "description": desc,
-    "dateOfBirth": year+'-'+month+'-'+day,
-    "posX": posx,
-    'posY': posy
+    "dateOfBirth": year+'-'+month+'-'+day
     })
-    headers = {
-    'Content-Type': 'application/json',
-    "Authorization":response.text
-    }
     requests.request("PUT", endpoint + "identity", headers=headers, data=payload)
 
     # HOBBIES
@@ -488,7 +495,6 @@ for i in range(0, 50):
             list.append(hobby)
 
     payload = json.dumps(list)
-
     requests.request("PUT", endpoint + "hobbies", headers=headers, data=payload)
 
     # STEPS
@@ -496,6 +502,21 @@ for i in range(0, 50):
     "identity": True,
     "gettingStarted": True
     })
-
     requests.request("PUT", endpoint + "steps", headers=headers, data=payload)
-    
+
+
+    # LOCATION
+    posx = randrange(-50, 50)
+    posy = randrange(-50, 50)
+
+    payload = json.dumps({
+    "posX": posx,
+    'posY': posy
+    })
+    requests.request("PUT", endpoint + "location", headers=headers, data=payload)
+
+    # SETTINGS
+    payload = json.dumps({
+    "maxDistance": 20
+    })
+    requests.request("PUT", endpoint + "settings", headers=headers, data=payload)
