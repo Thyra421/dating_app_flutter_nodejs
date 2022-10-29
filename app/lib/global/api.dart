@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import '../data/steps_data.dart';
 
 class Api {
-  static const String _kEndpoint = 'http://localhost:8080';
+  static const String _kEndpoint = 'http://54.220.143.7:8080';
   static const Duration _kTimeoutDuration = Duration(seconds: 10);
   static String _token = "";
 
