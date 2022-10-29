@@ -5,6 +5,7 @@ import 'package:app/global/format.dart';
 import 'package:app/global/messenger.dart';
 import 'package:app/global/navigation.dart';
 import 'package:app/utils/dropdown_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../global/api.dart';
@@ -19,8 +20,9 @@ class IdentityPage extends StatefulWidget {
 class _IdentityPageState extends State<IdentityPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _dateOfBirthController = TextEditingController();
+  // final TextEditingController _dateOfBirthController = TextEditingController();
   GenderData? _gender;
+  DateTime _dateOfBirth = DateTime(2000, 1, 1);
 
   void _onClickNext() async {
     if (!_formKey.currentState!.validate()) return;
@@ -28,7 +30,8 @@ class _IdentityPageState extends State<IdentityPage> {
       await Api.setIdentity(IdentityData(
           firstName: _firstNameController.text,
           gender: _gender,
-          dateOfBirth: DateTime.parse(_dateOfBirthController.text)));
+          // dateOfBirth: DateTime.parse(_dateOfBirthController.text))
+          dateOfBirth: _dateOfBirth));
       await Api.setSteps(StepsData(identity: true));
       Navigation.gettingStarted(replace: true);
     } on ErrorData catch (e) {
@@ -61,14 +64,23 @@ class _IdentityPageState extends State<IdentityPage> {
           hint: "Gender",
           error: s.errorText));
 
-  Widget _dateOfBirth() => formatFullRow(
-      child: TextFormField(
-          controller: _dateOfBirthController,
-          keyboardType: TextInputType.datetime,
-          decoration: const InputDecoration(hintText: "Date of birth"),
-          validator: (String? value) => (value ?? "").isEmpty
-              ? "Please enter your date of birth"
-              : null));
+  Widget _datePicker() => formatFullRow(
+      child: SizedBox(
+          height: 100,
+          child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              initialDateTime: _dateOfBirth,
+              onDateTimeChanged: (DateTime newDateTime) =>
+                  _dateOfBirth = newDateTime)));
+
+  // Widget _dateOfBirth() => formatFullRow(
+  //     child: TextFormField(
+  //         controller: _dateOfBirthController,
+  //         keyboardType: TextInputType.datetime,
+  //         decoration: const InputDecoration(hintText: "Date of birth"),
+  //         validator: (String? value) => (value ?? "").isEmpty
+  //             ? "Please enter your date of birth"
+  //             : null));
 
   Widget _nextButton() => formatFullRow(
       child:
@@ -87,7 +99,8 @@ class _IdentityPageState extends State<IdentityPage> {
           section("Gender identity"),
           _genderDropdown(),
           section("Date of birth"),
-          _dateOfBirth(),
+          // _dateOfBirth(),
+          _datePicker(),
           _nextButton()
         ]),
       ),

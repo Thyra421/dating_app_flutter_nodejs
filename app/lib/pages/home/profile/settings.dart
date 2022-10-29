@@ -193,7 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     _settingsData.maxDistance != null ? _onMoveSlider : null,
                 min: 0,
                 max: _distances.length - 1,
-                divisions: _distances.length - 1)),
+                divisions: _distances.length - 1))
       ]));
 
   Widget _logoutButton() => Center(

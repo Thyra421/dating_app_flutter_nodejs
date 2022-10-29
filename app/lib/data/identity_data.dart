@@ -35,7 +35,8 @@ class IdentityData {
   Map<String, dynamic> toJson() => {
         if (firstName != null) 'firstName': firstName!,
         if (description != null) 'description': description!,
-        if (dateOfBirth != null) 'dateOfBirth': dateOfBirth!.toString(),
+        if (dateOfBirth != null)
+          'dateOfBirth': dateOfBirth!.toString().split(' ').first,
         if (gender != null) 'gender': gender!.name,
       };
 }
