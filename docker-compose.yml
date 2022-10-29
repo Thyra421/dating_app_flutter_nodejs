@@ -8,6 +8,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    links:
+      - db
   db:
     build: ./database
     image: lust_db:latest
