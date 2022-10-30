@@ -1,22 +1,67 @@
+import 'dart:io';
+import 'package:app/data/error_data.dart';
 import 'package:flutter/foundation.dart';
-import 'package:universal_html/html.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:universal_html/html.dart' as html;
 
-String readStorage(String key) {
+Future<String> readStorage(String key) async {
   // Web
-  if (kIsWeb)
-    return window.localStorage.containsKey(key)
-        ? window.localStorage[key]!
-        : "";
+  if (kIsWeb) {
+    if (!html.window.localStorage.containsKey(key))
+      return Future.error(ErrorData(value: "File not found"));
+    return html.window.localStorage[key]!;
+  }
 
-  return "";
+  // Android
+  if (Platform.isAndroid) {
+    Directory directory = await getApplicationSupportDirectory();
+    String path = '${directory.path}/key';
+    File file = File.fromUri(Uri.file(path));
+    if (!await file.exists())
+      return Future.error(ErrorData(value: "File not found"));
+    return file.readAsString();
+  }
+
+  return Future.error(ErrorData(value: "Unsupported platform"));
 }
 
-void writeStorage(String key, String value) {
+Future<void> writeStorage(String key, String value) async {
   // Web
-  if (kIsWeb) window.localStorage[key] = value;
+  if (kIsWeb) {
+    html.window.localStorage[key] = value;
+    return;
+  }
+
+  // Android
+  if (Platform.isAndroid) {
+    Directory directory = await getApplicationSupportDirectory();
+    String path = '${directory.path}/key';
+    File file = File.fromUri(Uri.file(path));
+    if (!await file.exists()) file.create();
+    await file.writeAsString(value);
+    return;
+  }
+
+  return Future.error(ErrorData(value: "Unsupported platform"));
 }
 
-void clearStorage(String key) {
+Future<void> clearStorage(String key) async {
   // Web
-  if (kIsWeb) window.localStorage.remove(key);
+  if (kIsWeb) {
+    if (html.window.localStorage.containsKey(key))
+      html.window.localStorage.remove(key);
+    return;
+  }
+
+  // Android
+  if (Platform.isAndroid) {
+    Directory directory = await getApplicationSupportDirectory();
+    String path = '${directory.path}/key';
+    File file = File.fromUri(Uri.file(path));
+    if (await file.exists()) file.create();
+    await file.delete();
+    return;
+  }
+
+  return Future.error(ErrorData(value: "Unsupported platform"));
 }

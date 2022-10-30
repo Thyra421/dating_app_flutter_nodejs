@@ -19,6 +19,8 @@ services:
       - "27017:27017"
     volumes:
       - db_volume:/data/db/
+    env_file:
+      - .env
 
 volumes:
   db_volume:

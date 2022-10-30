@@ -22,9 +22,9 @@ class _LandingPageState extends State<LandingPage> {
   int _counter = 0;
 
   void _dispatch() async {
-    String token = readStorage('token');
-    Api.setToken(token);
     try {
+      String token = await readStorage('token');
+      Api.setToken(token);
       StepsData steps = await Api.getSteps();
       if (!steps.identity!) return Navigation.identity(replace: true);
       if (!steps.gettingStarted!)

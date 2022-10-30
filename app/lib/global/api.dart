@@ -11,8 +11,8 @@ import 'package:http/http.dart' as http;
 import '../data/steps_data.dart';
 
 class Api {
-  static const String _kEndpoint = 'http://54.220.143.7:8080';
-  static const Duration _kTimeoutDuration = Duration(seconds: 10);
+  static const String _kEndpoint = 'http://3.250.3.51:8080';
+  static const Duration _kTimeoutDuration = Duration(seconds: 5);
   static String _token = "";
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
@@ -29,7 +29,7 @@ class Api {
     required T Function(String body) onSuccess,
   }) async {
     try {
-      final http.Response response = await query().timeout(_kTimeoutDuration);
+      final http.Response response = await query();
       if (response.statusCode == 200) return onSuccess(response.body);
       return Future.error(ErrorData.fromJson(jsonDecode(response.body)));
     } on TimeoutException catch (_) {
@@ -50,7 +50,7 @@ class Api {
     required String mail,
     required String password,
   }) async =>
-      _request(
+      await _request(
           query: () => http.post(_url('login'),
               headers: _headers(authorization: false),
               body: jsonEncode({"mail": mail, 'password': password})),
@@ -63,7 +63,7 @@ class Api {
     required String mail,
     required String password,
   }) async =>
-      _request(
+      await _request(
           query: () => http.post(_url('register'),
               headers: _headers(authorization: false),
               body: jsonEncode({"mail": mail, 'password': password})),
@@ -72,7 +72,7 @@ class Api {
             writeStorage('token', body);
           });
 
-  static Future<SettingsData> getSettings() async => _request(
+  static Future<SettingsData> getSettings() async => await _request(
       query: () => http.get(_url('settings'), headers: _headers()),
       onSuccess: (String body) => SettingsData.fromJson(jsonDecode(body)));
 
@@ -81,34 +81,35 @@ class Api {
           headers: _headers(), body: jsonEncode(settingsData)),
       onSuccess: (_) => {});
 
-  static Future<List<String>> getHobbies() async => _request(
+  static Future<List<String>> getHobbies() async => await _request(
       query: () => http.get(_url('hobbies'), headers: _headers()),
       onSuccess: (String body) => List<String>.from(jsonDecode(body)));
 
-  static Future<void> setHobbies(List<String> hobbies) async => _request(
+  static Future<void> setHobbies(List<String> hobbies) async => await _request(
       query: () => http.put(_url('hobbies'),
           headers: _headers(), body: jsonEncode(hobbies)),
       onSuccess: (_) => {});
 
-  static Future<StepsData> getSteps() async => _request(
+  static Future<StepsData> getSteps() async => await _request(
       query: () => http.get(_url('steps'), headers: _headers()),
       onSuccess: (String body) => StepsData.fromJson(jsonDecode(body)));
 
-  static Future<void> setSteps(StepsData stepsData) async => _request(
+  static Future<void> setSteps(StepsData stepsData) async => await _request(
       query: () => http.put(_url('steps'),
           headers: _headers(), body: jsonEncode(stepsData)),
       onSuccess: (_) => {});
 
-  static Future<IdentityData> getIdentity() async => _request(
+  static Future<IdentityData> getIdentity() async => await _request(
       query: () => http.get(_url('identity'), headers: _headers()),
       onSuccess: (String body) => IdentityData.fromJson(jsonDecode(body)));
 
-  static Future<void> setIdentity(IdentityData identityData) async => _request(
-      query: () => http.put(_url('identity'),
-          headers: _headers(), body: jsonEncode(identityData)),
-      onSuccess: (_) => {});
+  static Future<void> setIdentity(IdentityData identityData) async =>
+      await _request(
+          query: () => http.put(_url('identity'),
+              headers: _headers(), body: jsonEncode(identityData)),
+          onSuccess: (_) => {});
 
-  static Future<List<MatchData>> search() async => _request(
+  static Future<List<MatchData>> search() async => await _request(
       query: () => http.get(_url('search'), headers: _headers()),
       onSuccess: (String body) =>
           List<Map<String, dynamic>>.from(jsonDecode(body))
