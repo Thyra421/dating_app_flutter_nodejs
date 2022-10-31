@@ -1,10 +1,10 @@
-import 'package:app/data/error_data.dart';
-import 'package:app/data/identity_data.dart';
-import 'package:app/data/steps_data.dart';
-import 'package:app/global/format.dart';
-import 'package:app/global/messenger.dart';
-import 'package:app/global/navigation.dart';
-import 'package:app/utils/dropdown_list.dart';
+import 'package:lust/data/error_data.dart';
+import 'package:lust/data/identity_data.dart';
+import 'package:lust/data/steps_data.dart';
+import 'package:lust/global/format.dart';
+import 'package:lust/global/messenger.dart';
+import 'package:lust/global/navigation.dart';
+import 'package:lust/utils/dropdown_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

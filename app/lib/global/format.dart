@@ -1,5 +1,5 @@
-import 'package:app/data/identity_data.dart';
-import 'package:app/theme.dart';
+import 'package:lust/data/identity_data.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 Widget formatFullRow({required Widget child}) => Padding(
@@ -47,3 +47,17 @@ Widget subtitle(String text) => Padding(
     padding: const EdgeInsets.symmetric(
         horizontal: kHorizontalPadding, vertical: 10),
     child: Text(text, style: const TextStyle(fontSize: 16)));
+
+InputDecoration editField() => InputDecoration(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+    filled: true,
+    fillColor: kBackgroundColor,
+    floatingLabelStyle: const TextStyle(color: kThemeColor),
+    labelStyle: const TextStyle(color: Colors.grey),
+    hintStyle: const TextStyle(color: Colors.grey),
+    focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey.shade700)),
+    errorBorder:
+        const OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+    focusedErrorBorder:
+        const OutlineInputBorder(borderSide: BorderSide(color: Colors.red)));

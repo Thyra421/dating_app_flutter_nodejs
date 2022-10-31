@@ -1,5 +1,5 @@
-import 'package:app/pages/landing.dart';
-import 'package:app/theme.dart';
+import 'package:lust/pages/landing.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {

@@ -1,8 +1,8 @@
-import 'package:app/pages/getting_started.dart';
-import 'package:app/pages/home/profile/settings/language.dart';
-import 'package:app/pages/home/profile/settings.dart';
-import 'package:app/pages/login.dart';
-import 'package:app/pages/register.dart';
+import 'package:lust/pages/getting_started.dart';
+import 'package:lust/pages/home/profile/settings/language.dart';
+import 'package:lust/pages/home/profile/settings.dart';
+import 'package:lust/pages/login.dart';
+import 'package:lust/pages/register.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/home.dart';

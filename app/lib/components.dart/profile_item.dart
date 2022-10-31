@@ -1,4 +1,4 @@
-import 'package:app/theme.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../global/format.dart';
@@ -84,7 +84,7 @@ class _ProfileItemState extends State<ProfileItem> {
         focusNode: _focusNodeEdit,
         controller: _controller,
         validator: _onValidate,
-        decoration: InputDecoration(hintText: widget.item),
+        decoration: editField().copyWith(hintText: widget.item),
         maxLength: 30,
         textCapitalization: TextCapitalization.sentences,
       ));

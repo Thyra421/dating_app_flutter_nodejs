@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lust/global/format.dart';
 
 class ProfileDescription extends StatefulWidget {
   const ProfileDescription({
@@ -59,7 +60,7 @@ class _ProfileDescriptionState extends State<ProfileDescription> {
         Expanded(
             child: TextField(
           focusNode: _editorFocusNode,
-          decoration: const InputDecoration(hintText: "Description"),
+          decoration: editField().copyWith(hintText: "Description"),
           controller: _descriptionController,
           maxLines: null,
         )),

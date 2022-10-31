@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const double kBorderRadius = 10;
 const Color kThemeColor = Color.fromARGB(255, 230, 32, 32); // lust
 const Color kBackgroundColor = Color(0xFF121212);
-const double kHorizontalPadding = 30;
+const double kHorizontalPadding = 20;
 
 MaterialColor _materialColor() => MaterialColor(kThemeColor.value, const {
       50: kThemeColor,
@@ -23,6 +23,8 @@ ThemeData darkTheme() => ThemeData(
       primarySwatch: _materialColor(),
       brightness: Brightness.dark,
     ).copyWith(secondary: _materialColor()),
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent, // ink well and buttons splash
     canvasColor: kBackgroundColor,
     hintColor: Colors.grey,
     textTheme: const TextTheme(

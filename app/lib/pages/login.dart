@@ -1,7 +1,7 @@
-import 'package:app/data/steps_data.dart';
-import 'package:app/global/api.dart';
-import 'package:app/global/navigation.dart';
-import 'package:app/theme.dart';
+import 'package:lust/data/steps_data.dart';
+import 'package:lust/global/api.dart';
+import 'package:lust/global/navigation.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../data/error_data.dart';

@@ -1,6 +1,6 @@
-import 'package:app/global/messenger.dart';
+import 'package:lust/global/messenger.dart';
 import 'package:flutter/material.dart';
-import 'package:app/global/navigation.dart';
+import 'package:lust/global/navigation.dart';
 import 'package:flutter/services.dart';
 
 import 'app.dart';

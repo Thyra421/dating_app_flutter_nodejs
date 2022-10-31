@@ -1,4 +1,4 @@
-import 'package:app/data/identity_data.dart';
+import 'package:lust/data/identity_data.dart';
 
 class MatchData {
   int? commonHobbiesCount;

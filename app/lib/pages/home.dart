@@ -1,5 +1,5 @@
-import 'package:app/pages/home/profile.dart';
-import 'package:app/pages/home/search.dart';
+import 'package:lust/pages/home/profile.dart';
+import 'package:lust/pages/home/search.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

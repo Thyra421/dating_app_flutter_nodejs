@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:app/data/error_data.dart';
-import 'package:app/data/identity_data.dart';
-import 'package:app/data/match_data.dart';
-import 'package:app/data/settings_data.dart';
-import 'package:app/global/storage.dart';
+import 'package:lust/data/error_data.dart';
+import 'package:lust/data/identity_data.dart';
+import 'package:lust/data/match_data.dart';
+import 'package:lust/data/settings_data.dart';
+import 'package:lust/global/storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../data/steps_data.dart';

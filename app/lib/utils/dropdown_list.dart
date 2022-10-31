@@ -1,5 +1,5 @@
-import 'package:app/global/format.dart';
-import 'package:app/theme.dart';
+import 'package:lust/global/format.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 class DropdownEntry<T> {

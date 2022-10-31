@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:app/data/match_data.dart';
-import 'package:app/global/api.dart';
-import 'package:app/theme.dart';
+import 'package:lust/data/match_data.dart';
+import 'package:lust/global/api.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {

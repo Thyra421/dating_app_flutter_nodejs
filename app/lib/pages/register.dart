@@ -1,7 +1,7 @@
-import 'package:app/data/error_data.dart';
-import 'package:app/global/messenger.dart';
-import 'package:app/global/navigation.dart';
-import 'package:app/theme.dart';
+import 'package:lust/data/error_data.dart';
+import 'package:lust/global/messenger.dart';
+import 'package:lust/global/navigation.dart';
+import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../global/api.dart';

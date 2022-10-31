@@ -1,13 +1,14 @@
 import 'dart:math';
-import 'package:app/components.dart/profile_description.dart';
-import 'package:app/components.dart/profile_item.dart';
-import 'package:app/data/identity_data.dart';
-import 'package:app/global/api.dart';
-import 'package:app/global/format.dart';
-import 'package:app/global/messenger.dart';
-import 'package:app/global/navigation.dart';
-import 'package:app/theme.dart';
-import 'package:app/utils/future_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lust/components.dart/profile_description.dart';
+import 'package:lust/components.dart/profile_item.dart';
+import 'package:lust/data/identity_data.dart';
+import 'package:lust/global/api.dart';
+import 'package:lust/global/format.dart';
+import 'package:lust/global/messenger.dart';
+import 'package:lust/global/navigation.dart';
+import 'package:lust/theme.dart';
+import 'package:lust/utils/future_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../components.dart/add_profile_item.dart';
@@ -47,6 +48,11 @@ class _ProfilePageState extends State<ProfilePage>
 
   void _scrollToBottom() =>
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+
+  void _scrollToTop() =>
+      _scrollController.animateTo(_scrollController.position.minScrollExtent,
+          curve: Curves.fastOutSlowIn,
+          duration: const Duration(milliseconds: 200));
 
   void _onOtherTip() => _randomTipId = Random().nextInt(_ideas.length);
 
@@ -113,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Expanded _name() => Expanded(
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(_identityData.firstName ?? "",
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))));
@@ -198,36 +204,32 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(children: [
-      FutureWidget(
-          future: () => Api.getIdentity()..then(_getIdentity, onError: (_) {}),
-          widget: _identity()),
-      _youLike(),
-      FutureWidget(
-          future: () => Api.getHobbies()..then(_getItemsList, onError: (_) {}),
-          widget: Expanded(
-              child: Stack(children: [
-            ListView(
-                padding: const EdgeInsets.only(bottom: 30),
-                controller: _scrollController,
-                children: [
-                  _items(),
-                  AddProfileItem(onAddItem: _onAddItem, itemsList: _itemsList),
-                  _noMoreIdea(),
-                ]),
-            // if (_scrollController.hasClients &&
-            //     _scrollController.position.pixels <
-            //         _scrollController.position.maxScrollExtent)
-            //   Align(
-            //       alignment: Alignment.bottomRight,
-            //       child: Padding(
-            //         padding: const EdgeInsets.all(20),
-            //         child: FloatingActionButton(
-            //             mini: true,
-            //             onPressed: _scrollToBottom,
-            //             child: const Icon(Icons.arrow_downward)),
-            //       ))
-          ])))
-    ]);
+    return FutureWidget(
+        future: () => Future.wait([Api.getIdentity(), Api.getHobbies()])
+          ..then((values) {
+            _getIdentity(values[0] as IdentityData);
+            _getItemsList(values[1] as List<String>);
+          }, onError: (_) {}),
+        widget: Column(children: [
+          _identity(),
+          _youLike(),
+          Expanded(
+              child: CustomScrollView(controller: _scrollController, slivers: [
+            // SliverAppBar(
+            //     automaticallyImplyLeading: false,
+            //     floating: true,
+            //     centerTitle: true,
+            //     title: IconButton(
+            //         padding: EdgeInsets.zero,
+            //         icon: const Icon(Icons.keyboard_arrow_up),
+            //         onPressed: _scrollToTop)),
+            SliverList(
+                delegate: SliverChildListDelegate([
+              _items(),
+              AddProfileItem(onAddItem: _onAddItem, itemsList: _itemsList),
+              _noMoreIdea()
+            ]))
+          ]))
+        ]));
   }
 }
