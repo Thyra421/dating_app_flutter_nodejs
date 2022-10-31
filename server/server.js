@@ -12,6 +12,7 @@ import { getSteps, setSteps } from './helpers/steps.js'
 import { getIdentity, setIdentity } from './helpers/identity.js'
 import { getLocation, setLocation } from './helpers/location.js'
 import { search } from './helpers/search.js'
+import { DB_URL } from './config/db_url.js'
 
 const app = express()
 app.use(cors())
@@ -22,6 +23,7 @@ app.listen(SERVER_PORT, () => {
 })
 
 app.get('/', (_, res) => {
+    console.log(DB_URL)
     return res.send("Server online")
 })
 

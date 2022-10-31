@@ -5,7 +5,7 @@ import requests
 import json
 from random import randrange
 
-endpoint = "http://54.220.143.7:8080/"
+endpoint = "http://3.250.3.51:8080/"
 # minlat = -90000
 # maxlat = 90000
 # minlong = -180000
@@ -506,8 +506,10 @@ for i in range(100):
 
 
     # LOCATION
-    posx = randrange(-50, 50)
-    posy = randrange(-50, 50)
+
+    posx = (randrange(-90, 90) * 10000 + randrange(10000)) / 10000
+    posy = (randrange(-180, 180) * 10000 + randrange(10000)) / 10000
+
 
     payload = json.dumps({
     "posX": posx,

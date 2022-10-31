@@ -1,1 +1,1 @@
-export const DB_URL = "mongodb://db:27017/"
+export const DB_URL = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@db:27017/?authMechanism=DEFAULT`
