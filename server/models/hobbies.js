@@ -9,6 +9,14 @@ export async function insertHobbies(newHobbies) {
 }
 
 export async function replaceHobbies(query, newHobbies) {
-    const setNewHobbies = { "$set": newHobbies }
+    const newHobbiesEntries = Object.entries(newHobbies)
+
+    const setNewHobbiesEntries = newHobbiesEntries.map(s => {
+        s[0] = `hobbies.${s[0]}`
+        return s
+    })
+
+    const setNewHobbies = { "$set": Object.fromEntries(setNewHobbiesEntries) }
+
     await hobbies.updateOne(query, setNewHobbies)
 }

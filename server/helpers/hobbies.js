@@ -20,7 +20,7 @@ export async function setHobbies(req, res) {
         return error(res, ErrorCodes.FORBIDDEN)
 
     const query = { userId: id }
-    const newHobbies = { hobbies: req.body }
+    const newHobbies = req.body
 
     await replaceHobbies(query, newHobbies)
     return success(res, "OK")

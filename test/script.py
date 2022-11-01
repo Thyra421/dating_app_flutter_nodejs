@@ -5,7 +5,7 @@ import requests
 import json
 from random import randrange
 
-endpoint = "http://3.250.3.51:8080/"
+endpoint = "http://127.0.0.1:8080/"
 # minlat = -90000
 # maxlat = 90000
 # minlong = -180000
@@ -494,7 +494,9 @@ for i in range(100):
         if hobby not in list:
             list.append(hobby)
 
-    payload = json.dumps(list)
+    payload = json.dumps({
+        'hobbies': list
+    })
     requests.request("PUT", endpoint + "hobbies", headers=headers, data=payload)
 
     # STEPS
@@ -504,12 +506,9 @@ for i in range(100):
     })
     requests.request("PUT", endpoint + "steps", headers=headers, data=payload)
 
-
     # LOCATION
-
     posx = (randrange(-90, 90) * 10000 + randrange(10000)) / 10000
     posy = (randrange(-180, 180) * 10000 + randrange(10000)) / 10000
-
 
     payload = json.dumps({
     "posX": posx,

@@ -13,6 +13,7 @@ import { getIdentity, setIdentity } from './helpers/identity.js'
 import { getLocation, setLocation } from './helpers/location.js'
 import { search } from './helpers/search.js'
 import { DB_URL } from './config/db_url.js'
+import { addRelations, getRelations, removeRelations } from './helpers/relations.js'
 
 const app = express()
 app.use(cors())
@@ -45,5 +46,10 @@ app.put('/identity', setIdentity)
 
 app.get('/location', getLocation)
 app.put('/location', setLocation)
+
+app.get('/relations', getRelations)
+app.patch('/relations/add', addRelations)
+app.patch('/relations/remove', removeRelations)
+
 
 app.get('/search', search)

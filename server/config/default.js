@@ -24,3 +24,12 @@ export const DEFAULT_LOCATION = {
     posX: 0,
     posY: 0
 }
+
+export const DEFAULT_RELATIONS = {
+    notInterested: [],
+    blocked: []
+}
+
+export const DEFAULT_HOBBIES = {
+    hobbies: []
+}
