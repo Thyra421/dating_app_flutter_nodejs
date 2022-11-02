@@ -6,7 +6,7 @@ import requests
 import json
 from random import randrange
 
-endpoint = "http://127.0.0.1:8080/"
+endpoint = "http://3.250.3.51:8080/"
 # minlat = -90000
 # maxlat = 90000
 # minlong = -180000

@@ -126,4 +126,16 @@ class Api {
           query: () => http.patch(_url('relations/remove'),
               headers: _headers(), body: jsonEncode(relationsData)),
           onSuccess: (_) => {});
+
+  static Future<void> addHobbies(HobbiesData hobbiesData) async =>
+      await _request(
+          query: () => http.patch(_url('hobbies/add'),
+              headers: _headers(), body: jsonEncode(hobbiesData)),
+          onSuccess: (_) => {});
+
+  static Future<void> removeHobbies(HobbiesData hobbiesData) async =>
+      await _request(
+          query: () => http.patch(_url('hobbies/remove'),
+              headers: _headers(), body: jsonEncode(hobbiesData)),
+          onSuccess: (_) => {});
 }

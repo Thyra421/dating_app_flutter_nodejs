@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage>
     setState(() => _itemsList.add(formatItem(item)));
 
     try {
-      await Api.setHobbies(_itemsList);
+      await Api.addHobbies(HobbiesData(hobbies: [item]));
       _scrollToBottom();
     } catch (e) {
       setState(() => _itemsList = backup);
@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage>
     setState(() => _itemsList.remove(item));
 
     try {
-      await Api.setHobbies(_itemsList);
+      await Api.removeHobbies(HobbiesData(hobbies: [item]));
     } catch (e) {
       setState(() => _itemsList = backup);
       Messenger.showSnackBar("Failed removing item");
