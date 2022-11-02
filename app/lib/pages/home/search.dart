@@ -75,50 +75,54 @@ class _SearchPageState extends State<SearchPage>
 
   Widget _match2() => Container(
       padding: const EdgeInsets.all(kHorizontalPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-              child: Stack(fit: StackFit.expand, children: [
-            _picture(),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                    padding: const EdgeInsets.all(kHorizontalPadding),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [_name(), _distance()])))
-          ])),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
-              child: _description()),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _hobbiesInCommon(),
-                        IconButton(
-                            onPressed: _onNotInterested,
-                            icon: const Icon(Icons.close, color: Colors.red)),
-                      ]),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(60, 60)),
-                          shape:
-                              MaterialStateProperty.all(const CircleBorder())),
-                      onPressed: () {},
-                      child: const Icon(Icons.message))
-                ],
-              )),
-        ],
-      ));
+      child: _matchData!.noMatch ?? false
+          ? const Center(child: Text("no match"))
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                  Expanded(
+                      child: Stack(fit: StackFit.expand, children: [
+                    _picture(),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                            padding: const EdgeInsets.all(kHorizontalPadding),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [_name(), _distance()])))
+                  ])),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: kHorizontalPadding),
+                      child: _description()),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _hobbiesInCommon(),
+                                  IconButton(
+                                      onPressed: _onNotInterested,
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.red)),
+                                ]),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    minimumSize: MaterialStateProperty.all(
+                                        const Size(60, 60)),
+                                    shape: MaterialStateProperty.all(
+                                        const CircleBorder())),
+                                onPressed: () {},
+                                child: const Icon(Icons.message))
+                          ]))
+                ]));
 
   Widget _match() => Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
