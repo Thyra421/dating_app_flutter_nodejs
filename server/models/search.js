@@ -107,6 +107,8 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
     ]
 
     const matches = await (location.aggregate(pipeline)).toArray()
+    if (matches.at.length == 0)
+        return { "noMatch": true }
 
     return matches[0]
 }

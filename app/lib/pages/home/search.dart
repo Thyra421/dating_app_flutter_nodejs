@@ -53,7 +53,7 @@ class _SearchPageState extends State<SearchPage>
 
   Widget _picture() => ClipRRect(
       borderRadius: BorderRadius.circular(kBorderRadius),
-      child: Image.asset('images/therock.jpg', fit: BoxFit.fitHeight));
+      child: Image.asset('assets/images/therock.jpg', fit: BoxFit.fitHeight));
 
   Widget _description() => Text(_matchData!.matchIdentity!.description!,
       textAlign: TextAlign.justify);
