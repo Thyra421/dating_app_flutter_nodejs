@@ -24,7 +24,6 @@ app.listen(SERVER_PORT, () => {
 })
 
 app.get('/', (_, res) => {
-    console.log(DB_URL)
     return res.send("Server online")
 })
 
