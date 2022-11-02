@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:lust/data/error_data.dart';
+import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
 import 'package:lust/data/match_data.dart';
 import 'package:lust/data/settings_data.dart';
@@ -11,7 +12,7 @@ import 'package:http/http.dart' as http;
 import '../data/steps_data.dart';
 
 class Api {
-  static const String _kEndpoint = 'http://3.250.3.51:8080';
+  static const String _kEndpoint = 'http://localhost:8080';
   static const Duration _kTimeoutDuration = Duration(seconds: 5);
   static String _token = "";
 
@@ -81,9 +82,9 @@ class Api {
           headers: _headers(), body: jsonEncode(settingsData)),
       onSuccess: (_) => {});
 
-  static Future<List<String>> getHobbies() async => await _request(
+  static Future<HobbiesData> getHobbies() async => await _request(
       query: () => http.get(_url('hobbies'), headers: _headers()),
-      onSuccess: (String body) => List<String>.from(jsonDecode(body)));
+      onSuccess: (String body) => HobbiesData.fromJson(jsonDecode(body)));
 
   static Future<void> setHobbies(List<String> hobbies) async => await _request(
       query: () => http.put(_url('hobbies'),

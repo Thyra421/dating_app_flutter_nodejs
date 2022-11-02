@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 ## SCRIPT TO POPULATE THE DATABASE WITH RANDOMLY GENERATED USERS ##
 
 import os

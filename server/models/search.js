@@ -1,6 +1,6 @@
 import { location } from "./database.js"
 
-export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistance) {
+export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistance, blocked, notInterested) {
     const isInRange = `function (xB, yB) {
         return Math.sqrt(Math.pow(${xA} - xB, 2) + Math.pow(${yA} - yB, 2)) <= ${maxDistance}
     }`
@@ -14,6 +14,8 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
             $match: {
                 $and: [
                     { userId: { $ne: userId } },
+                    { $expr: { $not: { $in: ["$userId", blocked] } } },
+                    // { $expr: { $not: { userId: { $in: notInterested } } } },
                     {
                         $expr: {
                             $function: {
@@ -49,7 +51,7 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
                 location: 1,
                 commonHobbies: {
                     $setIntersection: [
-                        "$hobbies",
+                        "$hobbies.hobbies",
                         userHobbies
                     ]
                 }

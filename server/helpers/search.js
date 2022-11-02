@@ -1,3 +1,4 @@
+import { DISTANCES } from '../config/distances.js'
 import { searchCommonHobbies } from "../models/search.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { checkAuthorization } from "../utils/header.js"
@@ -5,7 +6,7 @@ import { error, success } from "../utils/responses.js"
 import { selectHobbies } from "../models/hobbies.js"
 import { selectLocation } from "../models/location.js"
 import { selectSettings } from "../models/settings.js"
-import { DISTANCES } from '../config/distances.js'
+import { selectRelations } from "../models/relations.js"
 
 export async function search(req, res) {
     const id = await checkAuthorization(req.headers)
@@ -16,8 +17,10 @@ export async function search(req, res) {
     const hobbies = await selectHobbies(query)
     const location = await selectLocation(query)
     const settings = await selectSettings(query)
-    const matches = await searchCommonHobbies(id, hobbies.hobbies,
+    const relations = await selectRelations(query)
+    const matches = await searchCommonHobbies(id, hobbies.hobbies.hobbies,
         location.location.posX, location.location.posY,
-        DISTANCES[settings.settings.maxDistance])
+        DISTANCES[settings.settings.maxDistance],
+        relations.relations.blocked, relations.relations.notInterested)
     return success(res, matches)
 }

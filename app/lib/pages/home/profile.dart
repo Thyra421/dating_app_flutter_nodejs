@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:lust/components.dart/profile_description.dart';
 import 'package:lust/components.dart/profile_item.dart';
+import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
 import 'package:lust/global/api.dart';
 import 'package:lust/global/format.dart';
@@ -111,8 +112,8 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
-  void _getItemsList(List<String> itemsList) =>
-      setState(() => _itemsList = itemsList);
+  void _getItemsList(HobbiesData hobbiesData) =>
+      setState(() => _itemsList = hobbiesData.hobbies!);
 
   void _getIdentity(IdentityData identityData) =>
       setState(() => _identityData = identityData);
@@ -208,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage>
         future: () => Future.wait([Api.getIdentity(), Api.getHobbies()])
           ..then((values) {
             _getIdentity(values[0] as IdentityData);
-            _getItemsList(values[1] as List<String>);
+            _getItemsList(values[1] as HobbiesData);
           }, onError: (_) {}),
         widget: Column(children: [
           _identity(),
