@@ -15,7 +15,7 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
                 $and: [
                     { userId: { $ne: userId } },
                     { $expr: { $not: { $in: ["$userId", blocked] } } },
-                    // { $expr: { $not: { userId: { $in: notInterested } } } },
+                    { $expr: { $not: { $in: ["$userId", notInterested] } } },
                     {
                         $expr: {
                             $function: {
