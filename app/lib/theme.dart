@@ -45,6 +45,8 @@ ThemeData darkTheme() => ThemeData(
       if (states.contains(MaterialState.selected)) return kThemeColor;
       return Colors.grey;
     })),
+    floatingActionButtonTheme:
+        const FloatingActionButtonThemeData(foregroundColor: Colors.white),
     tabBarTheme: const TabBarTheme(
         labelColor: kThemeColor,
         unselectedLabelColor: Colors.white,

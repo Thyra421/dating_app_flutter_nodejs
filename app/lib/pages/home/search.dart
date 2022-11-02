@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:lust/data/match_data.dart';
+import 'package:lust/data/relations_data.dart';
 import 'package:lust/global/api.dart';
 import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage>
     with AutomaticKeepAliveClientMixin {
-  List<MatchData>? _matchesList;
+  MatchData? _matchData;
   Duration _duration = const Duration(minutes: 48, seconds: 13);
   late Timer _timer;
   bool _loading = false;
@@ -21,9 +22,9 @@ class _SearchPageState extends State<SearchPage>
   void _onSearch() async {
     try {
       setState(() => _loading = true);
-      List<MatchData> matches = await Api.search();
+      MatchData matchData = await Api.search();
       setState(() {
-        _matchesList = matches;
+        _matchData = matchData;
         _loading = false;
       });
     } catch (e) {
@@ -31,7 +32,95 @@ class _SearchPageState extends State<SearchPage>
     }
   }
 
-  Widget _match(MatchData matchData) => Container(
+  void _onNotInterested() async {
+    await Api.addRelations(RelationsData(notInterested: [_matchData!.userId!]));
+    _onSearch();
+  }
+
+  Widget _name() => Text.rich(TextSpan(
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          children: [
+            TextSpan(text: "${_matchData!.matchIdentity!.firstName!}, "),
+            TextSpan(
+                text: (_matchData!.matchIdentity!.dateOfBirth!
+                            .difference(DateTime.now())
+                            .inDays /
+                        365)
+                    .floor()
+                    .abs()
+                    .toString())
+          ]));
+
+  Widget _picture() => ClipRRect(
+      borderRadius: BorderRadius.circular(kBorderRadius),
+      child: Image.asset('images/therock.jpg', fit: BoxFit.fitHeight));
+
+  Widget _description() => Text(_matchData!.matchIdentity!.description!,
+      textAlign: TextAlign.justify);
+
+  Widget _hobbiesInCommon() => Text.rich(TextSpan(children: [
+        const TextSpan(text: "You have "),
+        TextSpan(
+            text: _matchData!.commonHobbiesCount!.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        const TextSpan(text: " hobbies in common")
+      ]));
+
+  Widget _distance() => Text.rich(TextSpan(children: [
+        TextSpan(
+            text: _matchData!.distance!.toStringAsFixed(1),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        const TextSpan(text: " km away")
+      ]));
+
+  Widget _match2() => Container(
+      padding: const EdgeInsets.all(kHorizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+              child: Stack(fit: StackFit.expand, children: [
+            _picture(),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: const EdgeInsets.all(kHorizontalPadding),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [_name(), _distance()])))
+          ])),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
+              child: _description()),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _hobbiesInCommon(),
+                        IconButton(
+                            onPressed: _onNotInterested,
+                            icon: const Icon(Icons.close, color: Colors.red)),
+                      ]),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          minimumSize:
+                              MaterialStateProperty.all(const Size(60, 60)),
+                          shape:
+                              MaterialStateProperty.all(const CircleBorder())),
+                      onPressed: () {},
+                      child: const Icon(Icons.message))
+                ],
+              )),
+        ],
+      ));
+
+  Widget _match() => Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -51,9 +140,9 @@ class _SearchPageState extends State<SearchPage>
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 children: [
-                  TextSpan(text: "${matchData.matchIdentity!.firstName!}, "),
+                  TextSpan(text: "${_matchData!.matchIdentity!.firstName!}, "),
                   TextSpan(
-                      text: (matchData.matchIdentity!.dateOfBirth!
+                      text: (_matchData!.matchIdentity!.dateOfBirth!
                                   .difference(DateTime.now())
                                   .inDays /
                               365)
@@ -64,7 +153,7 @@ class _SearchPageState extends State<SearchPage>
             Text.rich(TextSpan(children: [
               const TextSpan(text: "You have "),
               TextSpan(
-                  text: matchData.commonHobbiesCount!.toString(),
+                  text: _matchData!.commonHobbiesCount!.toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               const TextSpan(text: " hobbies in common")
             ]))
@@ -72,7 +161,7 @@ class _SearchPageState extends State<SearchPage>
         ]),
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Text(matchData.matchIdentity!.description!,
+            child: Text(_matchData!.matchIdentity!.description!,
                 textAlign: TextAlign.justify)),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(children: [
@@ -81,7 +170,7 @@ class _SearchPageState extends State<SearchPage>
                 child: Icon(Icons.pin_drop)),
             Text.rich(TextSpan(children: [
               TextSpan(
-                  text: matchData.distance!.toStringAsFixed(1),
+                  text: _matchData!.distance!.toStringAsFixed(1),
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               const TextSpan(text: " km away")
             ]))
@@ -113,10 +202,6 @@ class _SearchPageState extends State<SearchPage>
         ],
       );
 
-  Widget _matches() => ListView(
-      padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
-      children: _matchesList!.map((MatchData data) => _match(data)).toList());
-
   Widget _loadingIndicator() =>
       const Center(child: CircularProgressIndicator());
 
@@ -146,8 +231,8 @@ class _SearchPageState extends State<SearchPage>
       Expanded(
           child: _loading
               ? _loadingIndicator()
-              : _matchesList != null
-                  ? _matches()
+              : _matchData != null
+                  ? _match2()
                   : Container()),
       // _timeIndicator()
     ]);

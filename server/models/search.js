@@ -1,6 +1,6 @@
 import { location } from "./database.js"
 
-export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistance, blocked, notInterested) {
+export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, blocked, notInterested) {
     const isInRange = `function (xB, yB) {
         return Math.sqrt(Math.pow(${xA} - xB, 2) + Math.pow(${yA} - yB, 2)) <= ${maxDistance}
     }`
@@ -69,7 +69,7 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
             $sort: { commonHobbiesCount: -1 }
         },
         {
-            $limit: 5
+            $limit: 1
         },
         {
             $lookup: {
@@ -89,6 +89,7 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
         },
         {
             $project: {
+                userId: 1,
                 identity: 1,
                 commonHobbiesCount: 1,
                 distance: {
@@ -107,5 +108,5 @@ export async function searchCommonHobbies(userId, userHobbies, xA, yA, maxDistan
 
     const matches = await (location.aggregate(pipeline)).toArray()
 
-    return matches
+    return matches[0]
 }

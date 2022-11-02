@@ -5,6 +5,7 @@ import 'package:lust/data/error_data.dart';
 import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
 import 'package:lust/data/match_data.dart';
+import 'package:lust/data/relations_data.dart';
 import 'package:lust/data/settings_data.dart';
 import 'package:lust/global/storage.dart';
 import 'package:http/http.dart' as http;
@@ -110,10 +111,19 @@ class Api {
               headers: _headers(), body: jsonEncode(identityData)),
           onSuccess: (_) => {});
 
-  static Future<List<MatchData>> search() async => await _request(
+  static Future<MatchData> search() async => await _request(
       query: () => http.get(_url('search'), headers: _headers()),
-      onSuccess: (String body) =>
-          List<Map<String, dynamic>>.from(jsonDecode(body))
-              .map((e) => MatchData.fromJson(e))
-              .toList());
+      onSuccess: (String body) => MatchData.fromJson(jsonDecode(body)));
+
+  static Future<void> addRelations(RelationsData relationsData) async =>
+      await _request(
+          query: () => http.patch(_url('relations/add'),
+              headers: _headers(), body: jsonEncode(relationsData)),
+          onSuccess: (_) => {});
+
+  static Future<void> removeRelations(RelationsData relationsData) async =>
+      await _request(
+          query: () => http.patch(_url('relations/remove'),
+              headers: _headers(), body: jsonEncode(relationsData)),
+          onSuccess: (_) => {});
 }
