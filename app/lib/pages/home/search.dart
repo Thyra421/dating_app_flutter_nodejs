@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:location/location.dart';
 import 'package:lust/data/match_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/global/api.dart';
@@ -76,7 +77,12 @@ class _SearchPageState extends State<SearchPage>
   Widget _match2() => Container(
       padding: const EdgeInsets.all(kHorizontalPadding),
       child: _matchData!.noMatch ?? false
-          ? const Center(child: Text("no match"))
+          ? const Center(
+              child: Text(
+              "Oh no! It seems like there is no one in sight... Try again later",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            ))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -231,6 +237,34 @@ class _SearchPageState extends State<SearchPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Column(children: [
+      ElevatedButton(
+          onPressed: () async {
+            Location location = new Location();
+
+            bool _serviceEnabled;
+            PermissionStatus _permissionGranted;
+            LocationData _locationData;
+
+            _serviceEnabled = await location.serviceEnabled();
+            if (!_serviceEnabled) {
+              _serviceEnabled = await location.requestService();
+              if (!_serviceEnabled) {
+                return;
+              }
+            }
+
+            _permissionGranted = await location.hasPermission();
+            if (_permissionGranted == PermissionStatus.denied) {
+              _permissionGranted = await location.requestPermission();
+              if (_permissionGranted != PermissionStatus.granted) {
+                return;
+              }
+            }
+
+            _locationData = await location.getLocation();
+            print(_locationData.toString());
+          },
+          child: Text("Test locatioins")),
       _searchButton(),
       Expanded(
           child: _loading
