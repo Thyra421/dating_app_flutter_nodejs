@@ -1,7 +1,6 @@
 export const DEFAULT_SETTINGS = {
     notifications: true,
-    appearOnRadar: false,
-    trackPosition: false,
+    appearOnSearch: true,
     language: "English US",
     darkMode: true,
     maxDistance: 2
