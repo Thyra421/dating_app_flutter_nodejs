@@ -1,15 +1,13 @@
 class SettingsData {
   bool? notifications;
-  bool? appearOnRadar;
-  bool? trackPosition;
+  bool? appearOnSearch;
   bool? darkMode;
   String? language;
   int? maxDistance;
 
   SettingsData({
     this.notifications,
-    this.appearOnRadar,
-    this.trackPosition,
+    this.appearOnSearch,
     this.darkMode,
     this.language,
     this.maxDistance,
@@ -17,8 +15,7 @@ class SettingsData {
 
   factory SettingsData.fromJson(Map<String, dynamic> json) => SettingsData(
         notifications: json['notifications'],
-        appearOnRadar: json['appearOnRadar'],
-        trackPosition: json['trackPosition'],
+        appearOnSearch: json['appearOnSearch'],
         darkMode: json['darkMode'],
         language: json['language'],
         maxDistance: json['maxDistance'],
@@ -26,8 +23,7 @@ class SettingsData {
 
   void setFrom(SettingsData other) {
     if (other.notifications != null) notifications = other.notifications!;
-    if (other.appearOnRadar != null) appearOnRadar = other.appearOnRadar!;
-    if (other.trackPosition != null) trackPosition = other.trackPosition!;
+    if (other.appearOnSearch != null) appearOnSearch = other.appearOnSearch!;
     if (other.darkMode != null) darkMode = other.darkMode!;
     if (other.language != null) language = other.language!;
     if (other.maxDistance != null) maxDistance = other.maxDistance!;
@@ -35,8 +31,7 @@ class SettingsData {
 
   Map<String, dynamic> toJson() => {
         if (notifications != null) 'notifications': notifications!,
-        if (appearOnRadar != null) 'appearOnRadar': appearOnRadar!,
-        if (trackPosition != null) 'trackPosition': trackPosition!,
+        if (appearOnSearch != null) 'appearOnSearch': appearOnSearch!,
         if (darkMode != null) 'darkMode': darkMode!,
         if (language != null) 'language': language!,
         if (maxDistance != null) 'maxDistance': maxDistance!,

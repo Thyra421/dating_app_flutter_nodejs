@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
       child: SizedBox(height: 70, child: child));
 
-  Widget _switchAppearOnRadar() => _setting(
+  Widget _switchAppearOnSearch() => _setting(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -55,46 +55,16 @@ class _SettingsPageState extends State<SettingsPage> {
               Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Icon(Icons.radar)),
-              Text("Appear on radar")
+              Text("Appear on search")
             ]),
             Align(
               alignment: Alignment.centerRight,
               child: Switch(
-                  value: _settingsData.appearOnRadar ?? false,
-                  onChanged: _settingsData.appearOnRadar == null ||
-                          (_settingsData.trackPosition != null &&
-                              !_settingsData.trackPosition!)
+                  value: _settingsData.appearOnSearch ?? false,
+                  onChanged: _settingsData.appearOnSearch == null
                       ? null
                       : (bool value) =>
-                          _setSetting(SettingsData(appearOnRadar: value))),
-            )
-          ],
-        ),
-      );
-
-  Widget _switchTrackPosition() => _setting(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(children: const [
-              Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Icon(Icons.my_location)),
-              Text("Track my position")
-            ]),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Switch(
-                  value: _settingsData.trackPosition ?? false,
-                  onChanged: _settingsData.trackPosition == null
-                      ? null
-                      : (bool value) {
-                          if (!value)
-                            _setSetting(SettingsData(
-                                trackPosition: value, appearOnRadar: false));
-                          else
-                            _setSetting(SettingsData(trackPosition: value));
-                        }),
+                          _setSetting(SettingsData(appearOnSearch: value))),
             )
           ],
         ),
@@ -205,27 +175,29 @@ class _SettingsPageState extends State<SettingsPage> {
           child: const Text("Sign out")));
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: true),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FutureWidget(
-              future: () =>
-                  Api.getSettings()..then(_getSettings, onError: (_) {}),
-              widget: ListView(shrinkWrap: true, children: [
-                section("Privacy"),
-                _switchTrackPosition(),
-                _switchAppearOnRadar(),
-                section("Search distance"),
-                _distanceSlider(),
-                section("Notifications"),
-                _switchNotifications(),
-                section("Display"),
-                _selectLanguage(),
-                _switchDarkMode(),
-              ])),
-          _logoutButton(),
-        ],
-      ));
+  Widget build(BuildContext context) {
+    print('build s');
+    return Scaffold(
+        appBar: AppBar(automaticallyImplyLeading: true),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FutureWidget(
+                future: () =>
+                    Api.getSettings()..then(_getSettings, onError: (_) {}),
+                widget: ListView(shrinkWrap: true, children: [
+                  section("Privacy"),
+                  _switchAppearOnSearch(),
+                  section("Search distance"),
+                  _distanceSlider(),
+                  section("Notifications"),
+                  _switchNotifications(),
+                  section("Display"),
+                  _selectLanguage(),
+                  _switchDarkMode(),
+                ])),
+            _logoutButton(),
+          ],
+        ));
+  }
 }

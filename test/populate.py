@@ -7,10 +7,6 @@ import json
 from random import randrange
 
 endpoint = "http://3.250.3.51:8080/"
-# minlat = -90000
-# maxlat = 90000
-# minlong = -180000
-# maxlong = 180000
 
 names =["Liam",
 "Noah",

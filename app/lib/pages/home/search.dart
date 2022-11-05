@@ -1,8 +1,11 @@
 import 'dart:async';
-import 'package:location/location.dart';
+
+import 'package:location/location.dart' as loc;
+import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/global/api.dart';
+import 'package:lust/global/location.dart';
 import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +19,34 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage>
     with AutomaticKeepAliveClientMixin {
   MatchData? _matchData;
+  bool? _hasEnabledLocation;
   Duration _duration = const Duration(minutes: 48, seconds: 13);
   late Timer _timer;
   bool _loading = false;
+  LocationData _locationData = LocationData();
 
-  void _onSearch() async {
+  Future<void> _onGetLocation() async {
+    loc.LocationData? locationData = await Location.tryGetLocation();
+    if (locationData != null)
+      _locationData = LocationData(
+          posX: locationData.longitude, posY: locationData.latitude);
+    setState(() => _hasEnabledLocation = locationData != null);
+  }
+
+  Future<void> _onSearch() async {
     try {
       setState(() => _loading = true);
+
+      await _onGetLocation();
+      if (!_hasEnabledLocation!) {
+        setState(() => _loading = false);
+        return;
+      }
+
+      await Api.setLocation(_locationData);
+
       MatchData matchData = await Api.search();
+
       setState(() {
         _matchData = matchData;
         _loading = false;
@@ -74,15 +97,10 @@ class _SearchPageState extends State<SearchPage>
         const TextSpan(text: " km away")
       ]));
 
-  Widget _match2() => Container(
+  Widget _match() => Container(
       padding: const EdgeInsets.all(kHorizontalPadding),
       child: _matchData!.noMatch ?? false
-          ? const Center(
-              child: Text(
-              "Oh no! It seems like there is no one in sight... Try again later",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            ))
+          ? _noOneInSight()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
@@ -130,7 +148,7 @@ class _SearchPageState extends State<SearchPage>
                           ]))
                 ]));
 
-  Widget _match() => Container(
+  Widget _match2() => Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -213,7 +231,30 @@ class _SearchPageState extends State<SearchPage>
       );
 
   Widget _loadingIndicator() =>
-      const Center(child: CircularProgressIndicator());
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
+        CircularProgressIndicator(),
+        Text("Finding the best match for you...")
+      ]);
+
+  Widget _enableLocation() =>
+      const Center(child: Text("Enable your location to continue"));
+
+  Widget _search() {
+    if (_loading) return _loadingIndicator();
+    if (_hasEnabledLocation != null && !_hasEnabledLocation!)
+      return _enableLocation();
+    if (_matchData != null) return _match();
+    return Center(child: _searchButton());
+  }
+
+  Widget _noOneInSight() =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Text(
+            "Oh no! It seems like there is no one in sight... Try again later, or increase the search distance in your settings",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20)),
+        _searchButton()
+      ]);
 
   @override
   void dispose() {
@@ -236,43 +277,6 @@ class _SearchPageState extends State<SearchPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(children: [
-      ElevatedButton(
-          onPressed: () async {
-            Location location = new Location();
-
-            bool _serviceEnabled;
-            PermissionStatus _permissionGranted;
-            LocationData _locationData;
-
-            _serviceEnabled = await location.serviceEnabled();
-            if (!_serviceEnabled) {
-              _serviceEnabled = await location.requestService();
-              if (!_serviceEnabled) {
-                return;
-              }
-            }
-
-            _permissionGranted = await location.hasPermission();
-            if (_permissionGranted == PermissionStatus.denied) {
-              _permissionGranted = await location.requestPermission();
-              if (_permissionGranted != PermissionStatus.granted) {
-                return;
-              }
-            }
-
-            _locationData = await location.getLocation();
-            print(_locationData.toString());
-          },
-          child: Text("Test locatioins")),
-      _searchButton(),
-      Expanded(
-          child: _loading
-              ? _loadingIndicator()
-              : _matchData != null
-                  ? _match2()
-                  : Container()),
-      // _timeIndicator()
-    ]);
+    return _search();
   }
 }

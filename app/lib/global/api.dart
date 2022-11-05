@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:lust/data/error_data.dart';
 import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
+import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/data/settings_data.dart';
@@ -14,7 +15,6 @@ import '../data/steps_data.dart';
 
 class Api {
   static const String _kEndpoint = 'http://3.250.3.51:8080';
-  static const Duration _kTimeoutDuration = Duration(seconds: 5);
   static String _token = "";
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
@@ -137,5 +137,11 @@ class Api {
       await _request(
           query: () => http.patch(_url('hobbies/remove'),
               headers: _headers(), body: jsonEncode(hobbiesData)),
+          onSuccess: (_) => {});
+
+  static Future<void> setLocation(LocationData locationData) async =>
+      await _request(
+          query: () => http.put(_url('location'),
+              headers: _headers(), body: jsonEncode(locationData)),
           onSuccess: (_) => {});
 }

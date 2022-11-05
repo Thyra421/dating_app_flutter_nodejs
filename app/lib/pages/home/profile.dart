@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:lust/components.dart/profile_description.dart';
 import 'package:lust/components.dart/profile_item.dart';
 import 'package:lust/data/hobbies_data.dart';
