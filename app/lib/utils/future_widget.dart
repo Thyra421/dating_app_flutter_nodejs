@@ -5,10 +5,12 @@ class FutureWidget<T> extends StatefulWidget {
     super.key,
     required this.future,
     required this.widget,
+    this.onError,
   });
 
   final Future<T> Function() future;
   final Widget widget;
+  final Widget? onError;
 
   @override
   State<FutureWidget<T>> createState() => _FutureWidgetState<T>();
@@ -36,7 +38,7 @@ class _FutureWidgetState<T> extends State<FutureWidget<T>> {
   Widget _widget(T data) => widget.widget;
 
   Widget _buildState(BuildContext context, AsyncSnapshot<T> snapshot) {
-    if (snapshot.hasError) return _error();
+    if (snapshot.hasError) return widget.onError ?? _error();
     if (snapshot.connectionState == ConnectionState.done && snapshot.hasData)
       return _widget(snapshot.data as T);
     return _loading();

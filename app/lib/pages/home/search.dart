@@ -8,6 +8,7 @@ import 'package:lust/global/api.dart';
 import 'package:lust/global/location.dart';
 import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:lust/utils/future_widget.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -26,11 +27,14 @@ class _SearchPageState extends State<SearchPage>
   LocationData _locationData = LocationData();
 
   Future<void> _onGetLocation() async {
-    loc.LocationData? locationData = await Location.tryGetLocation();
-    if (locationData != null)
+    try {
+      loc.LocationData? locationData = await Location.getLocation();
       _locationData = LocationData(
           posX: locationData.longitude, posY: locationData.latitude);
-    setState(() => _hasEnabledLocation = locationData != null);
+      setState(() => _hasEnabledLocation = true);
+    } catch (_) {
+      setState(() => _hasEnabledLocation = false);
+    }
   }
 
   Future<void> _onSearch() async {
@@ -237,7 +241,10 @@ class _SearchPageState extends State<SearchPage>
       ]);
 
   Widget _enableLocation() =>
-      const Center(child: Text("Enable your location to continue"));
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Text("Please allow Lust to access your location to continue"),
+        TextButton(onPressed: _onGetLocation, child: const Text("OK"))
+      ]);
 
   Widget _search() {
     if (_loading) return _loadingIndicator();
@@ -249,10 +256,9 @@ class _SearchPageState extends State<SearchPage>
 
   Widget _noOneInSight() =>
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text(
-            "Oh no! It seems like there is no one in sight... Try again later, or increase the search distance in your settings",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20)),
+        const Text("""Oh no! It seems like there is no one in sight... 
+            Try again later, or increase the search distance in your settings""",
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
         _searchButton()
       ]);
 
@@ -265,10 +271,10 @@ class _SearchPageState extends State<SearchPage>
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-        const Duration(seconds: 1),
-        (Timer timer) =>
-            setState(() => _duration -= const Duration(seconds: 1)));
+    // _timer = Timer.periodic(
+    //     const Duration(seconds: 1),
+    //     (Timer timer) =>
+    //         setState(() => _duration -= const Duration(seconds: 1)));
   }
 
   @override
@@ -276,7 +282,13 @@ class _SearchPageState extends State<SearchPage>
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     super.build(context);
-    return _search();
+    return FutureWidget(
+        future: () => Location.getLocation()
+          ..then((value) => setState(() => _hasEnabledLocation = true),
+              onError: (_) {}),
+        onError: _enableLocation(),
+        widget: _search());
   }
 }

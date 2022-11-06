@@ -1,4 +1,5 @@
 import 'package:location/location.dart' as loc;
+import 'package:lust/data/error_data.dart';
 
 class Location {
   static loc.Location location = loc.Location();
@@ -35,9 +36,12 @@ class Location {
     return true;
   }
 
-  static Future<loc.LocationData?> tryGetLocation() async {
-    if (!await _isEnabled()) return null;
-    if (!await _hasPermission()) return null;
+  static Future<loc.LocationData> getLocation() async {
+    if (!await _isEnabled())
+      return Future.error(
+          ErrorData(value: "Failed initializing location module"));
+    if (!await _hasPermission())
+      return Future.error("Location permission denied");
 
     loc.LocationData locationData = await location.getLocation();
     print("location is $locationData");
