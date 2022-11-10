@@ -10,12 +10,31 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
     }`
 
     const pipeline = [
+        // Merge with settings
+        {
+            $lookup: {
+                from: "settings",
+                localField: "userId",
+                foreignField: "userId",
+                as: "tmp"
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects:
+                        [{ $arrayElemAt: ["$tmp", 0] }, "$$ROOT"]
+                }
+            }
+        },
+        // Filter out blocked users, already seen users, invisible users and users not in range
         {
             $match: {
                 $and: [
                     { userId: { $ne: userId } },
                     { $expr: { $not: { $in: ["$userId", blocked] } } },
                     { $expr: { $not: { $in: ["$userId", notInterested] } } },
+                    { $expr: { $eq: ["$settings.appearOnSearch", true] } },
                     {
                         $expr: {
                             $function: {
@@ -28,6 +47,7 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
                 ]
             }
         },
+        // Merge with hobbies
         {
             $lookup: {
                 from: "hobbies",
@@ -44,33 +64,31 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
                 }
             }
         },
+        // Find common hobbies count
         {
             $project: {
                 userId: 1,
                 identity: 1,
                 location: 1,
-                commonHobbies: {
-                    $setIntersection: [
-                        "$hobbies.hobbies",
-                        userHobbies
-                    ]
+                commonHobbiesCount: {
+                    $size: {
+                        $setIntersection: [
+                            "$hobbies.hobbies",
+                            userHobbies
+                        ]
+                    }
                 }
             }
         },
-        {
-            $project: {
-                userId: 1,
-                identity: 1,
-                location: 1,
-                commonHobbiesCount: { $size: "$commonHobbies" }
-            }
-        },
+        // Sort by highest hobbies count
         {
             $sort: { commonHobbiesCount: -1 }
         },
+        // Select the first one
         {
             $limit: 1
         },
+        // Merge with identity
         {
             $lookup: {
                 from: "identity",
@@ -87,6 +105,7 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
                 }
             }
         },
+        // Add distance
         {
             $project: {
                 userId: 1,
@@ -101,6 +120,7 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
                 }
             }
         },
+        // Remove id
         {
             $project: { _id: 0 }
         }

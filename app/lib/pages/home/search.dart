@@ -214,7 +214,6 @@ class _SearchPageState extends State<SearchPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("pfc");
       _onPressSearch();
     });
     // _timer = Timer.periodic(

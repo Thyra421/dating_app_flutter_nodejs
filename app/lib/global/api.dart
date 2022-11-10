@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import '../data/steps_data.dart';
 
 class Api {
-  static const String _kEndpoint = 'http://3.250.3.51:8080';
+  static const String _kEndpoint = 'http://localhost:8080';
   static String _token = "";
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
