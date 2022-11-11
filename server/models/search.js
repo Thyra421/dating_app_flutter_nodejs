@@ -1,4 +1,7 @@
+import { getPictures } from "../helpers/pictures.js"
+import { downloadFile } from "../utils/s3.js"
 import { location } from "./database.js"
+import { selectPictures } from "./pictures.js"
 
 export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, blocked, notInterested) {
     const isInRange = `function (xB, yB) {
@@ -105,12 +108,29 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
                 }
             }
         },
+        // Merge with pictures
+        // {
+        //     $lookup: {
+        //         from: "pictures",
+        //         localField: "userId",
+        //         foreignField: "userId",
+        //         as: "tmp"
+        //     }
+        // }, {
+        //     $replaceRoot: {
+        //         newRoot: {
+        //             $mergeObjects:
+        //                 [{ $arrayElemAt: ["$tmp.pictures", 0] }, "$$ROOT"]
+        //         }
+        //     }
+        // },
         // Add distance
         {
             $project: {
                 userId: 1,
                 identity: 1,
                 commonHobbiesCount: 1,
+                pictures: 1,
                 distance: {
                     $function: {
                         body: distance,
@@ -129,6 +149,15 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
     const matches = await (location.aggregate(pipeline)).toArray()
     if (matches.length == 0)
         return { "noMatch": true }
+
+    const query = { userId: matches[0].userId }
+    const pictures = await selectPictures(query)
+    console.log(pictures)
+    const urls = await Promise.all(pictures.pictures.pictures.map(
+        async picture => await downloadFile(picture.name)
+    ))
+
+    matches[0].pictures = urls
 
     return matches[0]
 }
