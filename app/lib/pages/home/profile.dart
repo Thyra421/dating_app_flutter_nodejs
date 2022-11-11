@@ -3,6 +3,7 @@ import 'package:lust/components.dart/profile_description.dart';
 import 'package:lust/components.dart/profile_item.dart';
 import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
+import 'package:lust/data/pictures_data.dart';
 import 'package:lust/global/api.dart';
 import 'package:lust/global/format.dart';
 import 'package:lust/global/messenger.dart';
@@ -26,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage>
   late int _randomTipId;
 
   IdentityData _identityData = IdentityData();
+  PicturesData _picturesData = PicturesData();
 
   List<String> _itemsList = [];
 
@@ -111,6 +113,9 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
+  void _getPicturesList(PicturesData picturesData) =>
+      setState(() => _picturesData = picturesData);
+
   void _getItemsList(HobbiesData hobbiesData) =>
       setState(() => _itemsList = hobbiesData.hobbies!);
 
@@ -130,11 +135,15 @@ class _ProfilePageState extends State<ProfilePage>
       icon: const Icon(Icons.settings));
 
   Container _profilePicture() => Container(
-      height: 70,
-      width: 70,
+      height: 80,
+      width: 80,
       decoration:
           const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-      child: const Icon(Icons.person, color: Colors.black, size: 40));
+      child: _picturesData.pictures != null
+          ? ClipOval(
+              // borderRadius: BorderRadius.circular(kBorderRadius),
+              child: Image.network(_picturesData.pictures![0]))
+          : const Icon(Icons.person, color: Colors.black, size: 40));
 
   Widget _identity() => Padding(
       padding: const EdgeInsets.only(
@@ -205,11 +214,16 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureWidget(
-        future: () => Future.wait([Api.getIdentity(), Api.getHobbies()])
-          ..then((values) {
-            _getIdentity(values[0] as IdentityData);
-            _getItemsList(values[1] as HobbiesData);
-          }, onError: (_) {}),
+        future: () => Future.wait([
+              Api.getIdentity(),
+              Api.getHobbies(),
+              Api.getPictures(),
+            ])
+              ..then((values) {
+                _getIdentity(values[0] as IdentityData);
+                _getItemsList(values[1] as HobbiesData);
+                _getPicturesList(values[2] as PicturesData);
+              }, onError: (_) {}),
         widget: Column(children: [
           _identity(),
           _youLike(),

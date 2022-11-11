@@ -6,7 +6,7 @@ import requests
 import json
 from random import randrange
 
-endpoint = "http://localhost:8080/"
+endpoint = "http://3.250.3.51:8080/"
 
 names =["Liam",
 "Noah",

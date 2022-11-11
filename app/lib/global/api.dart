@@ -6,6 +6,7 @@ import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
 import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
+import 'package:lust/data/pictures_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/data/settings_data.dart';
 import 'package:lust/global/storage.dart';
@@ -14,7 +15,7 @@ import 'package:http/http.dart' as http;
 import '../data/steps_data.dart';
 
 class Api {
-  static const String _kEndpoint = 'http://localhost:8080';
+  static const String _kEndpoint = 'http://3.250.3.51:8080';
   static String _token = "";
 
   static Uri _url(String route) => Uri.parse("$_kEndpoint/$route");
@@ -144,4 +145,8 @@ class Api {
           query: () => http.put(_url('location'),
               headers: _headers(), body: jsonEncode(locationData)),
           onSuccess: (_) => {});
+
+  static Future<PicturesData> getPictures() async => await _request(
+      query: () => http.get(_url('pictures'), headers: _headers()),
+      onSuccess: (String body) => PicturesData.fromJson(jsonDecode(body)));
 }

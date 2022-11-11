@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:location/location.dart' as loc;
 import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
+import 'package:lust/data/pictures_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/global/api.dart';
 import 'package:lust/global/location.dart';
@@ -77,9 +78,17 @@ class _SearchPageState extends State<SearchPage>
             TextSpan(text: _getAge(_matchData!.matchIdentity!.dateOfBirth!))
           ]));
 
-  Widget _picture() => ClipRRect(
-      borderRadius: BorderRadius.circular(kBorderRadius),
-      child: Image.asset('assets/images/therock.jpg', fit: BoxFit.fitHeight));
+  Widget _picture() => ShaderMask(
+      shaderCallback: (rect) {
+        return const LinearGradient(
+          begin: Alignment(0, .8),
+          end: Alignment.bottomCenter,
+          colors: [Colors.black, Colors.transparent],
+        ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+      },
+      blendMode: BlendMode.dstIn,
+      child: Image.network(_matchData!.pictures!.pictures![0],
+          fit: BoxFit.fitHeight));
 
   Widget _description() => Text(_matchData!.matchIdentity!.description!,
       textAlign: TextAlign.justify);
@@ -108,7 +117,7 @@ class _SearchPageState extends State<SearchPage>
       child: const Icon(Icons.favorite));
 
   Widget _match() => Container(
-      padding: const EdgeInsets.all(kHorizontalPadding),
+      // padding: const EdgeInsets.all(kHorizontalPadding),
       child: _matchData!.noMatch ?? false
           ? _noOneInSight()
           : Column(
@@ -129,10 +138,12 @@ class _SearchPageState extends State<SearchPage>
                   ])),
                   Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: kHorizontalPadding),
+                          vertical: kHorizontalPadding,
+                          horizontal: kHorizontalPadding),
                       child: _description()),
                   Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: kHorizontalPadding),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
