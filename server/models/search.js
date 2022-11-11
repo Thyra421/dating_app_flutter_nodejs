@@ -152,12 +152,11 @@ export async function searchBestMatch(userId, userHobbies, xA, yA, maxDistance, 
 
     const query = { userId: matches[0].userId }
     const pictures = await selectPictures(query)
-    console.log(pictures)
     const urls = await Promise.all(pictures.pictures.pictures.map(
         async picture => await downloadFile(picture.name)
     ))
 
-    matches[0].pictures = urls
+    matches[0].pictures = { pictures: urls }
 
     return matches[0]
 }
