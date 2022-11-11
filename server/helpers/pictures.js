@@ -46,7 +46,9 @@ export async function addPicture(req, res) {
     const picturesToAdd = { pictures: [newPicture] }
 
     await updateAddPictures(query, picturesToAdd)
-    return success(res, "OK")
+
+    const url = await downloadFile(name)
+    return success(res, { ...newPicture, url: url })
 }
 
 export async function getPictures(req, res) {
@@ -57,6 +59,7 @@ export async function getPictures(req, res) {
     const query = { userId: id }
     var pictures = await selectPictures(query)
 
+    // Insert a url field to all pictures 
     pictures.pictures.pictures = await Promise.all(pictures.pictures.pictures.map(
         async picture => {
             const url = await downloadFile(picture.name)
