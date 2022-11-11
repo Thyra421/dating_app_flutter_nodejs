@@ -55,10 +55,14 @@ export async function getPictures(req, res) {
         return error(res, ErrorCodes.FORBIDDEN)
 
     const query = { userId: id }
-    const pictures = await selectPictures(query)
-    const urls = await Promise.all(pictures.pictures.pictures.map(
-        async picture => await downloadFile(picture.name)
+    var pictures = await selectPictures(query)
+
+    pictures.pictures.pictures = await Promise.all(pictures.pictures.pictures.map(
+        async picture => {
+            const url = await downloadFile(picture.name)
+            return { ...picture, url: url }
+        }
     ))
 
-    return success(res, { pictures: urls })
+    return success(res, pictures.pictures)
 }
