@@ -25,7 +25,7 @@ export async function downloadFile(name) {
     return url
 }
 
-export async function uploadFile(file, naupdateme) {
+export async function uploadFile(file, name) {
     const params = {
         Bucket: s3BucketName,
         Key: name,
