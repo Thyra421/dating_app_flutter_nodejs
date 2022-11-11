@@ -122,28 +122,32 @@ class _ProfilePageState extends State<ProfilePage>
   void _getIdentity(IdentityData identityData) =>
       setState(() => _identityData = identityData);
 
-  Expanded _name() => Expanded(
+  Widget _name() => Expanded(
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(_identityData.firstName ?? "",
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))));
 
-  IconButton _settingsButton() => IconButton(
+  Widget _settingsButton() => IconButton(
       iconSize: 30,
       onPressed: () => Navigation.settings(),
       icon: const Icon(Icons.settings));
 
-  Container _profilePicture() => Container(
-      height: 80,
-      width: 80,
-      decoration:
-          const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-      child: _picturesData.pictures != null
-          ? ClipOval(
-              // borderRadius: BorderRadius.circular(kBorderRadius),
-              child: Image.network(_picturesData.pictures![0]))
-          : const Icon(Icons.person, color: Colors.black, size: 40));
+  Widget _profilePicture() => InkWell(
+      onTap: () => Navigation.pictures(
+          initialPicturesData: _picturesData,
+          onChange: (PicturesData newData) =>
+              setState(() => _picturesData = newData)),
+      child: Container(
+          height: 80,
+          width: 80,
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          child: _picturesData.pictures != null &&
+                  _picturesData.pictures!.isNotEmpty
+              ? ClipOval(child: Image.network(_picturesData.pictures![0].url!))
+              : const Icon(Icons.person, color: Colors.black, size: 40)));
 
   Widget _identity() => Padding(
       padding: const EdgeInsets.only(
@@ -221,7 +225,8 @@ class _ProfilePageState extends State<ProfilePage>
             ])
               ..then((values) {
                 _getIdentity(values[0] as IdentityData);
-                _getItemsList(values[1] as HobbiesData);
+                _getItemsList(values[1]
+                    as HobbiesData); // problem here because set state each time monkaS
                 _getPicturesList(values[2] as PicturesData);
               }, onError: (_) {}),
         widget: Column(children: [

@@ -41,7 +41,7 @@ Widget title(String name) => Padding(
     padding: const EdgeInsets.symmetric(
         horizontal: kHorizontalPadding, vertical: 10),
     child: Text(name,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25)));
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)));
 
 Widget subtitle(String text) => Padding(
     padding: const EdgeInsets.symmetric(

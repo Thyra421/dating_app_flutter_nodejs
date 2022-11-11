@@ -15,6 +15,7 @@ dependencies:
   universal_html: ^2.0.8
   path_provider: ^2.0.11
   location: ^4.4.0
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:

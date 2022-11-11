@@ -1,10 +1,11 @@
+import 'package:lust/data/pictures_data.dart';
 import 'package:lust/pages/getting_started.dart';
+import 'package:lust/pages/home/profile/pictures.dart';
 import 'package:lust/pages/home/profile/settings/language.dart';
 import 'package:lust/pages/home/profile/settings.dart';
 import 'package:lust/pages/login.dart';
 import 'package:lust/pages/register.dart';
 import 'package:flutter/material.dart';
-
 import '../pages/home.dart';
 import '../pages/identity.dart';
 
@@ -71,4 +72,18 @@ class Navigation {
     bool replace = false,
   }) =>
       _push(child: const GettingStartedPage(), replace: replace, then: then);
+
+  static void pictures({
+    void Function(dynamic value)? then,
+    bool replace = false,
+    required PicturesData initialPicturesData,
+    required void Function(PicturesData newData) onChange,
+  }) =>
+      _push(
+          child: PicturesPage(
+            initialPicturesData: initialPicturesData,
+            onChange: onChange,
+          ),
+          replace: replace,
+          then: then);
 }

@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _setSetting(SettingsData settingsData) async {
-    SettingsData backup = SettingsData()..setFrom(_settingsData);
+    final SettingsData backup = SettingsData()..setFrom(_settingsData);
 
     setState(() => _settingsData.setFrom(settingsData));
     try {
@@ -175,29 +175,26 @@ class _SettingsPageState extends State<SettingsPage> {
           child: const Text("Sign out")));
 
   @override
-  Widget build(BuildContext context) {
-    print('build s');
-    return Scaffold(
-        appBar: AppBar(automaticallyImplyLeading: true),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FutureWidget(
-                future: () =>
-                    Api.getSettings()..then(_getSettings, onError: (_) {}),
-                widget: ListView(shrinkWrap: true, children: [
-                  section("Privacy"),
-                  _switchAppearOnSearch(),
-                  section("Search distance"),
-                  _distanceSlider(),
-                  section("Notifications"),
-                  _switchNotifications(),
-                  section("Display"),
-                  _selectLanguage(),
-                  _switchDarkMode(),
-                ])),
-            _logoutButton(),
-          ],
-        ));
-  }
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(automaticallyImplyLeading: true),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FutureWidget(
+              future: () =>
+                  Api.getSettings()..then(_getSettings, onError: (_) {}),
+              widget: ListView(shrinkWrap: true, children: [
+                section("Privacy"),
+                _switchAppearOnSearch(),
+                section("Search distance"),
+                _distanceSlider(),
+                section("Notifications"),
+                _switchNotifications(),
+                section("Display"),
+                _selectLanguage(),
+                _switchDarkMode(),
+              ])),
+          _logoutButton(),
+        ],
+      ));
 }

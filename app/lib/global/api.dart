@@ -6,6 +6,7 @@ import 'package:lust/data/hobbies_data.dart';
 import 'package:lust/data/identity_data.dart';
 import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
+import 'package:lust/data/picture_data.dart';
 import 'package:lust/data/pictures_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/data/settings_data.dart';
@@ -149,4 +150,27 @@ class Api {
   static Future<PicturesData> getPictures() async => await _request(
       query: () => http.get(_url('pictures'), headers: _headers()),
       onSuccess: (String body) => PicturesData.fromJson(jsonDecode(body)));
+
+  static Future<void> setPictures(PicturesData picturesData) async =>
+      await _request(
+          query: () => http.put(_url('pictures'),
+              headers: _headers(), body: jsonEncode(picturesData)),
+          onSuccess: (_) => {});
+
+  static Future<void> deletePicture(PictureData pictureData) async =>
+      await _request(
+          query: () => http.delete(_url('pictures'),
+              headers: _headers(), body: jsonEncode(pictureData)),
+          onSuccess: (_) => {});
+
+  static Future<PictureData> addPicture(String path) async => await _request(
+      query: () async {
+        http.MultipartRequest request =
+            http.MultipartRequest('POST', _url('pictures'));
+        request.files.add(await http.MultipartFile.fromPath('picture', path));
+        request.headers.addAll(_headers());
+        http.StreamedResponse response = await request.send();
+        return http.Response.fromStream(response);
+      },
+      onSuccess: (String body) => PictureData.fromJson(jsonDecode(body)));
 }

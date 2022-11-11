@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:location/location.dart' as loc;
 import 'package:lust/data/location_data.dart';
 import 'package:lust/data/match_data.dart';
-import 'package:lust/data/pictures_data.dart';
 import 'package:lust/data/relations_data.dart';
 import 'package:lust/global/api.dart';
 import 'package:lust/global/location.dart';
@@ -87,7 +86,7 @@ class _SearchPageState extends State<SearchPage>
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
       },
       blendMode: BlendMode.dstIn,
-      child: Image.network(_matchData!.pictures!.pictures![0],
+      child: Image.network(_matchData!.pictures!.pictures![0].url!,
           fit: BoxFit.fitHeight));
 
   Widget _description() => Text(_matchData!.matchIdentity!.description!,
