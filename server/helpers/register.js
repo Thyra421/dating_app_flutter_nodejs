@@ -1,15 +1,16 @@
 import { insertHobbies } from "../models/hobbies.js"
 import { insertSettings } from "../models/settings.js"
 import { insertUser, userExists } from "../models/users.js"
-import { DEFAULT_HOBBIES, DEFAULT_IDENTITY, DEFAULT_LOCATION, DEFAULT_RELATIONS, DEFAULT_SETTINGS, DEFAULT_STEPS } from "../config/default.js"
+import { DEFAULT_HOBBIES, DEFAULT_IDENTITY, DEFAULT_LOCATION, DEFAULT_PICTURES, DEFAULT_RELATIONS, DEFAULT_SETTINGS, DEFAULT_STEPS } from "../config/default.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { error, success } from "../utils/responses.js"
 import { generateToken } from "../utils/token.js"
 import { insertSteps } from "../models/steps.js"
 import { insertIdentity } from "../models/identity.js"
 import { insertLocation } from "../models/location.js"
-import bcrypt from "bcryptjs"
 import { insertRelations } from "../models/relations.js"
+import bcrypt from "bcryptjs"
+import { insertPictures } from "../models/pictures.js"
 
 export async function register(req, res) {
     /// Check if user alread exists    
@@ -32,12 +33,14 @@ export async function register(req, res) {
     const newIdentity = { userId: newUserId, identity: DEFAULT_IDENTITY }
     const newLocation = { userId: newUserId, location: DEFAULT_LOCATION }
     const newRelations = { userId: newUserId, relations: DEFAULT_RELATIONS }
+    const newPictures = { userId: newUserId, pictures: DEFAULT_PICTURES }
     await insertHobbies(newHobbies)
     await insertSettings(newSettings)
     await insertSteps(newSteps)
     await insertIdentity(newIdentity)
     await insertLocation(newLocation)
     await insertRelations(newRelations)
+    await insertPictures(newPictures)
 
     /// Generate jwt 
     const token = generateToken(newUserId)

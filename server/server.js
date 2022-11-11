@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import multer from 'multer'
 
 import { SERVER_PORT } from './config/port.js'
 
@@ -13,8 +14,12 @@ import { getIdentity, setIdentity } from './helpers/identity.js'
 import { getLocation, setLocation } from './helpers/location.js'
 import { addRelations, getRelations, removeRelations } from './helpers/relations.js'
 import { search } from './helpers/search.js'
+import { addPicture, getPictures, setPictures } from './helpers/pictures.js'
 
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 const app = express()
+
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -52,3 +57,7 @@ app.patch('/relations/add', addRelations)
 app.patch('/relations/remove', removeRelations)
 
 app.get('/search', search)
+
+app.get('/pictures', getPictures)
+app.put('/pictures', setPictures)
+app.post('/pictures', upload.single('picture'), addPicture)

@@ -32,3 +32,7 @@ export const DEFAULT_RELATIONS = {
 export const DEFAULT_HOBBIES = {
     hobbies: []
 }
+
+export const DEFAULT_PICTURES = {
+    pictures: []
+}

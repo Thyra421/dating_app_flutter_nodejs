@@ -6,7 +6,7 @@ import requests
 import json
 from random import randrange
 
-endpoint = "http://3.250.3.51:8080/"
+endpoint = "http://localhost:8080/"
 
 names =["Liam",
 "Noah",
@@ -446,6 +446,50 @@ descriptions = ["A strong positive mental attitude will create more miracles tha
 "The only person you are destined to become is the person you decide to be. -Ralph Waldo Emerson"
 ]
 
+pictures = ["avatar-355059af3cecc7f916e427faa14358c9.jpg",
+
+"avatar-3b1418f912f7d02b59243842e4f3208b.jpg",
+
+"avatar-419d418ab25070a75ed746d981c0b471.jpg",
+
+"avatar-4a1dc36093a1f9176a361e90eadc47cb.jpg",
+
+"avatar-4c7838276c122765db37b79af204f025.jpg",
+
+"avatar-531414b2676a0c778afb7f77b222d4f3.jpg",
+
+"avatar-69695de621f0dc7fa48a2c61f125e582.jpg",
+
+"avatar-6f001b52f351814faa29e03ca4e6774a.jpg",
+
+"avatar-78a61293a690c0ce2e243d7197aad961.jpg",
+
+"avatar-7ad0898d8865a240fbc923b3526d7f61.jpg",
+
+"avatar-7d3c78db5945093b43177e735f121ad7.jpg",
+
+"avatar-7fbdf083f377426e73112cd801fa950d.jpg",
+
+"avatar-8418271870c71d84827f996b6dc23e40.jpg",
+
+"avatar-87ccebfb14fee253068d6099ea3fe7c2.jpg",
+
+"avatar-a2549a185a5d31006a9d9f7faa84957e.jpg",
+
+"avatar-ab4694d42fae4a2e3321165864d85634.jpg",
+
+"avatar-b364d187586d3cc91450b2216d800621.jpg",
+
+"avatar-c1179b7942e55651a16bf30d82962fb1.jpg",
+
+"avatar-c40e8445cb0e448d1fb247f812f57b93.jpg",
+
+"avatar-d1d012fe19a5d33563aa17ad39107652.jpg",
+
+"avatar-eb2b6525789e2bc34c99df6e239c76dd.jpg",
+
+"avatar-ee9118621f0e419f9561f99b7a73df0e.jpg"]
+
 for i in range(100):
     os.system('clear')
     print(i+1)
@@ -512,3 +556,10 @@ for i in range(100):
     'posY': posy
     })
     requests.request("PUT", endpoint + "location", headers=headers, data=payload)
+
+    # PICTURE
+    pic = pictures[randrange(len(pictures))]
+    p = {'pictures':[{'name':pic, 'originalName':pic}]}
+
+    payload =json.dumps(p)
+    requests.request("PUT", endpoint + "pictures", headers=headers, data=payload)
