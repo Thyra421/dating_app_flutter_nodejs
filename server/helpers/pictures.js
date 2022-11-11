@@ -60,5 +60,5 @@ export async function getPictures(req, res) {
         async picture => await downloadFile(picture.name)
     ))
 
-    return success(res, urls)
+    return success(res, { pictures: urls })
 }
