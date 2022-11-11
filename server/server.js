@@ -14,7 +14,7 @@ import { getIdentity, setIdentity } from './helpers/identity.js'
 import { getLocation, setLocation } from './helpers/location.js'
 import { addRelations, getRelations, removeRelations } from './helpers/relations.js'
 import { search } from './helpers/search.js'
-import { addPicture, getPictures, setPictures } from './helpers/pictures.js'
+import { addPicture, getPictures, removePicture, setPictures } from './helpers/pictures.js'
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
@@ -60,4 +60,5 @@ app.get('/search', search)
 
 app.get('/pictures', getPictures)
 app.put('/pictures', setPictures)
+app.delete('/pictures', removePicture)
 app.post('/pictures', upload.single('picture'), addPicture)

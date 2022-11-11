@@ -1,6 +1,6 @@
-import { replacePictures, selectPictures, updateAddPictures, updateRemovePictures } from "../models/pictures.js"
 import crypto from 'crypto'
 
+import { replacePictures, selectPictures, updateAddPictures, updateRemovePicture } from "../models/pictures.js"
 import { ErrorCodes } from "../config/error_codes.js"
 import { checkAuthorization } from "../utils/header.js"
 import { error, success } from "../utils/responses.js"
@@ -11,11 +11,12 @@ export async function removePicture(req, res) {
     if (id === null)
         return error(res, ErrorCodes.FORBIDDEN)
 
-    // deleteFile()
-    // const query = { userId: id }
-    // const picturesToRemove = req.body
+    await deleteFile(req.body.name)
 
-    // await updateRemovePictures(query, picturesToRemove)
+    const query = { userId: id }
+    const pictureToRemove = req.body
+
+    await updateRemovePicture(query, pictureToRemove)
     return success(res, "OK")
 }
 

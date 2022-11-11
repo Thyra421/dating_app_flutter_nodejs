@@ -9,7 +9,7 @@ export async function deleteFile(name) {
         Key: name
     }
 
-    const command = new DeleteObjectCommand()
+    const command = new DeleteObjectCommand(params)
 
     await s3.send(command)
 }

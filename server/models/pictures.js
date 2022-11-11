@@ -8,16 +8,8 @@ export async function insertPictures(newPictures) {
     await pictures.insertOne(newPictures)
 }
 
-export async function updateRemovePictures(query, newPictures) {
-    const newPicturesEntries = Object.entries(newPictures)
-
-    const setNewPicturesEntries = newPicturesEntries.map(s => {
-        s[0] = `pictures.${s[0]}`
-        s[1] = { $in: s[1] }
-        return s
-    })
-
-    const pullPictures = { $pull: Object.fromEntries(setNewPicturesEntries) }
+export async function updateRemovePicture(query, pictureToRemove) {
+    const pullPictures = { $pull: { 'pictures.pictures': pictureToRemove } }
 
     await pictures.updateOne(query, pullPictures)
 }
