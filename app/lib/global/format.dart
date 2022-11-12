@@ -61,3 +61,9 @@ InputDecoration editField() => InputDecoration(
         const OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
     focusedErrorBorder:
         const OutlineInputBorder(borderSide: BorderSide(color: Colors.red)));
+
+Widget imageLoader(
+    BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+  if (loadingProgress == null) return child;
+  return const Center(child: CircularProgressIndicator());
+}

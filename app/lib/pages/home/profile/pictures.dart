@@ -34,9 +34,8 @@ class _PicturesPageState extends State<PicturesPage>
         PicturesData(pictures: List.from(_picturesData.pictures!));
 
     setState(() {
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
-      }
+      if (oldIndex < newIndex) newIndex -= 1;
+
       final PictureData item = _picturesData.pictures!.removeAt(oldIndex);
       _picturesData.pictures!.insert(newIndex, item);
     });
@@ -76,7 +75,6 @@ class _PicturesPageState extends State<PicturesPage>
     }
   }
 
-  // TODO add a loading
   void _onAdd(ImageSource imageSource) async {
     final XFile? file = await _picker.pickImage(source: imageSource);
     if (file == null) return;
@@ -87,6 +85,7 @@ class _PicturesPageState extends State<PicturesPage>
         _picturesData.pictures!.add(newPicture);
         _controller =
             TabController(length: _picturesData.pictures!.length, vsync: this);
+        _controller.animateTo(_controller.length - 1);
       });
       widget.onChange(_picturesData);
       Navigation.pop();
@@ -175,12 +174,16 @@ class _PicturesPageState extends State<PicturesPage>
   Widget _add() =>
       IconButton(onPressed: _showAddPictureModal, icon: const Icon(Icons.add));
 
-  List<Widget> _pages() =>
-      _picturesData.pictures!.map((p) => Image.network(p.url!)).toList();
+  List<Widget> _pages() => _picturesData.pictures!
+      .map((p) => Image.network(p.url!, loadingBuilder: imageLoader))
+      .toList();
 
   Widget _previewItem(int index, String pic) => InkWell(
       key: Key(pic),
-      child: Image.network(pic),
+      child: SizedBox(
+          width: 100,
+          child: Image.network(pic,
+              fit: BoxFit.cover, loadingBuilder: imageLoader)),
       onTap: () => _controller.animateTo(index));
 
   Widget _preview() => SizedBox(

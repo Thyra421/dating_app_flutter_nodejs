@@ -142,11 +142,15 @@ class _ProfilePageState extends State<ProfilePage>
       child: Container(
           height: 80,
           width: 80,
-          decoration:
-              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          decoration: const BoxDecoration(shape: BoxShape.circle),
           child: _picturesData.pictures != null &&
                   _picturesData.pictures!.isNotEmpty
-              ? ClipOval(child: Image.network(_picturesData.pictures![0].url!))
+              ? ClipOval(
+                  child: Image.network(
+                  _picturesData.pictures![0].url!,
+                  loadingBuilder: imageLoader,
+                  fit: BoxFit.fitWidth,
+                ))
               : const Icon(Icons.person, color: Colors.black, size: 40)));
 
   Widget _identity() => Padding(

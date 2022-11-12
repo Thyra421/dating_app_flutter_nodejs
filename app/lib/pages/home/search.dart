@@ -10,6 +10,8 @@ import 'package:lust/global/messenger.dart';
 import 'package:lust/theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../global/format.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -87,7 +89,7 @@ class _SearchPageState extends State<SearchPage>
       },
       blendMode: BlendMode.dstIn,
       child: Image.network(_matchData!.pictures!.pictures![0].url!,
-          fit: BoxFit.fitHeight));
+          fit: BoxFit.fitHeight, loadingBuilder: imageLoader));
 
   Widget _description() => Text(_matchData!.matchIdentity!.description!,
       textAlign: TextAlign.justify);
