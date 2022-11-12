@@ -67,3 +67,16 @@ Widget imageLoader(
   if (loadingProgress == null) return child;
   return const Center(child: CircularProgressIndicator());
 }
+
+Widget modal(context, String title, Widget child) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          section(title),
+          const Divider(),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: kHorizontalPadding),
+              child: child)
+        ]));

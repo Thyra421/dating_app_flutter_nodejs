@@ -146,11 +146,8 @@ class _ProfilePageState extends State<ProfilePage>
           child: _picturesData.pictures != null &&
                   _picturesData.pictures!.isNotEmpty
               ? ClipOval(
-                  child: Image.network(
-                  _picturesData.pictures![0].url!,
-                  loadingBuilder: imageLoader,
-                  fit: BoxFit.fitWidth,
-                ))
+                  child: Image.network(_picturesData.pictures![0].url!,
+                      loadingBuilder: imageLoader, fit: BoxFit.fitWidth))
               : const Icon(Icons.person, color: Colors.black, size: 40)));
 
   Widget _identity() => Padding(

@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
       initialIndex: 1,
       length: _pages.length,
       child: Scaffold(
-          body: TabBarView(children: _pages),
+          body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(), children: _pages),
           bottomNavigationBar: _navigationBar()));
 }
