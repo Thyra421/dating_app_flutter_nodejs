@@ -26,6 +26,7 @@ class _SearchPageState extends State<SearchPage>
   bool _loading = false;
   LocationData _locationData = LocationData();
   late TabController _controller;
+  bool _showDescription = true;
 
   void _onShowActionsModal() => showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -103,16 +104,18 @@ class _SearchPageState extends State<SearchPage>
           ]));
 
   Widget _picture(String url) => ShaderMask(
-      shaderCallback: (rect) {
-        return const LinearGradient(
-          begin: Alignment(0, .5),
-          end: Alignment.bottomCenter,
-          colors: [Colors.black, Colors.transparent],
-        ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-      },
+      shaderCallback: (rect) => LinearGradient(
+            begin: const Alignment(0, .5),
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black,
+              _showDescription ? Colors.transparent : Colors.black
+            ],
+          ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height)),
       blendMode: BlendMode.dstIn,
-      child:
-          Image.network(url, fit: BoxFit.cover, loadingBuilder: imageLoader));
+      child: Image.network(url,
+          fit: _showDescription ? BoxFit.cover : BoxFit.contain,
+          loadingBuilder: imageLoader));
 
   List<Widget> _picturesList() =>
       _matchData!.pictures!.pictures!.map((p) => _picture(p.url!)).toList();
@@ -162,41 +165,55 @@ class _SearchPageState extends State<SearchPage>
   Widget _optionsButton() => IconButton(
       onPressed: _onShowActionsModal, icon: const Icon(Icons.flag_circle));
 
+  void _toggleShowDescriptions() =>
+      setState(() => _showDescription = !_showDescription);
+
   Widget _match() => Container(
       child: _matchData!.noMatch ?? false
           ? _noOneInSight()
           : Stack(children: [
-              FractionallySizedBox(heightFactor: .8, child: _pictures()),
+              InkWell(
+                  onTap: _toggleShowDescriptions,
+                  child: FractionallySizedBox(
+                      heightFactor: _showDescription ? .8 : 1,
+                      child: _pictures())),
               Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: _pictureNavigation()),
               Align(alignment: Alignment.topRight, child: _optionsButton()),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(kHorizontalPadding),
-                        child: _name()),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: kHorizontalPadding),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [_hobbiesInCommon(), _distance()])),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: kHorizontalPadding,
-                            horizontal: kHorizontalPadding),
-                        child: _description()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: kHorizontalPadding),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [_notInterestedButton(), _likeButton()]),
-                    )
-                  ])
+              AnimatedOpacity(
+                  opacity: _showDescription ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(kHorizontalPadding),
+                            child: _name()),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kHorizontalPadding),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [_hobbiesInCommon(), _distance()])),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: kHorizontalPadding,
+                                horizontal: kHorizontalPadding),
+                            child: _description()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: kHorizontalPadding),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _notInterestedButton(),
+                                _likeButton()
+                              ]),
+                        )
+                      ]))
             ]));
 
   Widget _searchButton() => Center(
